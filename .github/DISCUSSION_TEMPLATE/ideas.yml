@@ -1,0 +1,32 @@
+title: "[Idea]: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Feature Ideas & Optimization Proposals
+        Have an idea for improving telemetry decoding, visual analytics, or workflow automation? Share your proposal below!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement / Workflow Need
+      description: What challenge are you trying to solve or what insight are you missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution / Visualization
+      description: How would you like this to work? (Feel free to describe UI layout, metrics, or CLI flags)
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered (Optional)
+      description: Have you explored any other workarounds or custom scripts?
+    validations:
+      required: false

@@ -1,0 +1,116 @@
+{
+  "1318": {
+    "name": "Gemini 3.8 Flash (High)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "high"
+  },
+  "1319": {
+    "name": "Gemini 3.8 Flash (Medium)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "medium"
+  },
+  "1320": {
+    "name": "Gemini 3.8 Flash (Low)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "low"
+  },
+  "1298": {
+    "name": "Gemini 3.7 Flash (High)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "high"
+  },
+  "1299": {
+    "name": "Gemini 3.7 Flash (Medium)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "medium"
+  },
+  "1300": {
+    "name": "Gemini 3.7 Flash (Low)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "low"
+  },
+  "1071": {
+    "name": "Gemini 3.6 Flash (High)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "high"
+  },
+  "1072": {
+    "name": "Gemini 3.6 Flash (Medium)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "medium"
+  },
+  "1073": {
+    "name": "Gemini 3.6 Flash (Low)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "low"
+  },
+  "1016": {
+    "name": "Gemini 3.1 Pro (High)",
+    "family": "gemini-pro",
+    "provider": "google",
+    "reasoning_effort": "high"
+  },
+  "1036": {
+    "name": "Gemini 3.1 Pro (Low)",
+    "family": "gemini-pro",
+    "provider": "google",
+    "reasoning_effort": "low"
+  },
+  "1050": {
+    "name": "Gemini Flash Lite (Subagent)",
+    "family": "gemini-flash-lite",
+    "provider": "google",
+    "reasoning_effort": "none"
+  },
+  "1322": {
+    "name": "Gemini Fast Agent Assistant",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "none"
+  },
+  "1132": {
+    "name": "Gemini Fast Agent (Legacy)",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "none"
+  },
+  "1301": {
+    "name": "Gemini Experimental Agent",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "none"
+  },
+  "1035": {
+    "name": "Claude Sonnet 4.6 (Thinking)",
+    "family": "claude-sonnet",
+    "provider": "anthropic",
+    "reasoning_effort": "thinking"
+  },
+  "1026": {
+    "name": "Claude Opus 4.6 (Thinking)",
+    "family": "claude-opus",
+    "provider": "anthropic",
+    "reasoning_effort": "thinking"
+  },
+  "1020": {
+    "name": "Gemini Search Agent",
+    "family": "gemini-flash",
+    "provider": "google",
+    "reasoning_effort": "none"
+  },
+  "342": {
+    "name": "GPT-OSS 120B (Medium)",
+    "family": "gpt-oss",
+    "provider": "openai",
+    "reasoning_effort": "medium"
+  }
+}

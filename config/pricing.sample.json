@@ -1,0 +1,169 @@
+{
+  "_comment": "Antigravity Token Dashboard: Sample Pricing & Plan Configuration. Copy this file to config/pricing.json to calibrate your local installation.",
+  "subscription": {
+    "tier": "pro",
+    "name": "Google One AI Premium (Antigravity Pro)",
+    "monthly_price_gbp": 18.99,
+    "monthly_price_usd": 19.99,
+    "renewal_day": 24,
+    "use_ai_credits": false,
+    "cents_per_credit": 1.0,
+    "windows": {
+      "burst_hours": 5,
+      "weekly_hours": 168
+    },
+    "quota_limits": {
+      "burst_5h_tokens": 168000000,
+      "gemini_5h_capacity_usd": 20.00,
+      "gemini_weekly_capacity_usd": 129.00,
+      "claude_5h_capacity_usd": 10.00,
+      "claude_weekly_capacity_usd": 35.00
+    }
+  },
+  "currency": {
+    "default": "GBP",
+    "supported": ["GBP", "USD", "EUR"],
+    "usd_to_gbp_fx_rate": 0.79,
+    "credit_pack": {
+      "description": "Prepaid AI credits add-on bank with automatic reload at exhaustion",
+      "credits": 2500,
+      "pack_size": 2500,
+      "auto_reload": true,
+      "price_gbp": 23.99,
+      "price_usd": 25.00,
+      "pence_per_credit": 0.9596,
+      "cents_per_credit": 1.0,
+      "cost_per_credit_gbp": 0.009596,
+      "cost_per_credit_usd": 0.010000,
+      "is_prepaid_overage_pool": true
+    }
+  },
+  "models": {
+    "1318": {
+      "name": "Gemini 3.8 Flash (High)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.501672,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1319": {
+      "name": "Gemini 3.8 Flash (Medium)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.501672,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1016": {
+      "name": "Gemini 3.1 Pro (High)",
+      "family": "gemini-pro",
+      "credits_per_turn": 7.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.00,
+        "prompt_cached": 0.20,
+        "candidate_output": 12.00
+      }
+    },
+    "1050": {
+      "name": "Gemini 3.1 Flash Lite",
+      "family": "gemini-flash",
+      "credits_per_turn": 1.0,
+      "rates_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.025,
+        "candidate_output": 1.50
+      }
+    },
+    "1322": {
+      "name": "Fast Agent Assistant (Subagent)",
+      "family": "gemini-flash",
+      "credits_per_turn": 1.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.50,
+        "prompt_cached": 0.05,
+        "candidate_output": 2.50
+      }
+    },
+    "1036": {
+      "name": "Gemini 3.1 Pro Low (Architecture)",
+      "family": "gemini-pro",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.50,
+        "prompt_cached": 0.15,
+        "candidate_output": 8.00
+      }
+    },
+    "1035": {
+      "name": "Claude Sonnet 4.6 (Thinking)",
+      "family": "claude-sonnet",
+      "credits_per_turn": 10.0,
+      "rates_per_million": {
+        "prompt_uncached": 3.00,
+        "prompt_cached": 0.30,
+        "candidate_output": 15.00
+      }
+    },
+    "1026": {
+      "name": "Claude Opus 4.6 (Thinking)",
+      "family": "claude-opus",
+      "credits_per_turn": 25.0,
+      "rates_per_million": {
+        "prompt_uncached": 15.00,
+        "prompt_cached": 1.50,
+        "candidate_output": 75.00
+      }
+    },
+    "342": {
+      "name": "GPT-OSS 120B (Medium)",
+      "family": "gpt-oss",
+      "credits_per_turn": 8.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.50,
+        "prompt_cached": 0.25,
+        "candidate_output": 10.00
+      }
+    },
+    "default": {
+      "name": "Default Model",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    }
+  },
+  "subscription_history": [
+    {
+      "valid_from": "2024-01-01T00:00:00Z",
+      "valid_to": null,
+      "tier": "pro",
+      "name": "Google One AI Premium (Antigravity Pro)",
+      "monthly_price_gbp": 18.99,
+      "monthly_price_usd": 19.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 168000000,
+        "gemini_5h_capacity_usd": 20.00,
+        "gemini_weekly_capacity_usd": 129.00,
+        "claude_5h_capacity_usd": 10.00,
+        "claude_weekly_capacity_usd": 35.00
+      }
+    }
+  ],
+  "promotions": [],
+  "rate_history": {}
+}

@@ -1,0 +1,2 @@
+11111111-1111-1111-1111-111111111111file:///workspace/project-alpha
+22222222-2222-2222-2222-222222222222file:///workspace/project-beta

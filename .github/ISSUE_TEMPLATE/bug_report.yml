@@ -1,0 +1,68 @@
+name: Bug Report
+description: Report an error or unexpected behavior in the telemetry parser, watcher, or dashboard.
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please ensure you have tested with the latest release on `main`.
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running?
+      options:
+        - macOS Sequoia (15.x)
+        - macOS Sonoma (14.x)
+        - Linux (Ubuntu/Debian)
+        - Windows 11 / WSL
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: python_version
+    attributes:
+      label: Python Version
+      description: Output of `python3 --version`
+      placeholder: "e.g. Python 3.12.2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can maintainers reproduce this issue?
+      placeholder: |
+        1. Run `python3 scripts/export_dashboard.py`
+        2. Inspect output in terminal
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output or Traceback
+      description: Please paste sanitized logs (scrub any personal usernames or paths).
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct & Sanity Check
+      options:
+        - label: I have verified that no private API keys, personal names, or confidential documents are included in this report.
+          required: true
+        - label: I agree to follow this project's Code of Conduct.
+          required: true

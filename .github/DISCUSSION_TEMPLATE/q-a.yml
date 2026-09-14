@@ -1,0 +1,46 @@
+title: "[Q&A]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Community Q&A & Troubleshooting
+        Ask questions about Antigravity telemetry, setup, quota math, or context caching efficiency.
+        
+        > [!NOTE]
+        > Please remember to sanitize any log snippets to avoid posting personal paths or confidential code.
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic Area
+      description: What area does your question relate to?
+      options:
+        - Quotas & 5-Hour Recovery Window
+        - Context Caching & Hit Ratio Optimization
+        - Watcher Daemon & LaunchAgent Service
+        - Model IDs & Comparative Rate Cards
+        - OS Compatibility (Linux / Windows / WSL)
+        - General Discussion
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: Describe what you are trying to do or understand.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: System Environment (Optional)
+      description: Details that might help others assist you.
+      placeholder: |
+        - OS: macOS Sequoia 15.1 / Ubuntu 24.04 / Windows 11
+        - Python: 3.12
+        - Antigravity Version: e.g. 2.0
+    validations:
+      required: false

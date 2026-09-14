@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Token Consumption & Quota Dashboard</title>
+  <script src="meta.js"></script>
+  <script src="data.js"></script>
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem("antigravity_dashboard_theme");
+        var theme = (savedTheme === "dark") ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>Antigravity Token Consumption & Quota Dashboard</h1>
+        <p>Deterministic runtime telemetry, 5h & 1w rolling allowances, and context caching efficiency</p>
+      </div>
+      <div class="badges">
+        <span id="sub-status-badge" class="badge green">● Safe in Pro Quota</span>
+        <button id="btn-open-plan-manager" class="badge purple" style="cursor: pointer; border: 1px solid var(--accent-purple); font-weight: 600; display: inline-flex; align-items: center; gap: 5px;" title="Open Plan Profile & Promotion Manager">
+          <span>⚙️</span> <span id="header-tier-badge">Pro Tier Active</span>
+        </button>
+        <span id="billing-cycle-badge" class="badge">Billing: Renews 24 Sep</span>
+        <div class="toggle-group" id="currency-toggle-group">
+          <button id="btn-curr-gbp">GBP (£)</button>
+          <button id="btn-curr-usd">USD ($)</button>
+        </div>
+        <div class="toggle-group" id="theme-toggle-group">
+          <button id="btn-theme-light">☀️ Light</button>
+          <button id="btn-theme-dark">🌙 Dark</button>
+        </div>
+        <button id="btn-copy-standup" class="badge" style="cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;" title="Copy Markdown Summary for Standup">
+          <span>📋</span> <span id="btn-copy-standup-text">Copy Summary</span>
+        </button>
+        <span class="badge">SQLite WAL Hook</span>
+        <span id="session-count-badge" class="badge">0 Sessions</span>
+      </div>
+    </header>
+
+    <!-- 2. TOP-LEVEL TAB NAVIGATION (Jobs-Based: Now, Sessions, Projects, Billing, Plan) -->
+    <div class="tab-nav">
+      <button id="tab-now" class="tab-btn active" onclick="switchTab('tab-now')">
+        Now
+      </button>
+      <button id="tab-sessions" class="tab-btn" onclick="switchTab('tab-sessions')">
+        Sessions
+      </button>
+      <button id="tab-projects" class="tab-btn" onclick="switchTab('tab-projects')">
+        Projects
+      </button>
+      <button id="tab-swarms" class="tab-btn" onclick="switchTab('tab-swarms')">
+        Swarms &amp; Tools
+      </button>
+      <button id="tab-billing" class="tab-btn" onclick="switchTab('tab-billing')">
+        Billing
+      </button>
+      <button id="tab-plan" class="tab-btn" onclick="switchTab('tab-plan')">
+        Plan
+      </button>
+    </div>
+
+    <!-- VIEW 1: Now -->
+    <div id="view-now" class="tab-view active">
+      <div class="section-card" id="dual-provider-quotas-section" style="margin-bottom: 24px;">
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div>
+          <h2 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+            <span>Antigravity Provider Quota Silos</span>
+            <span class="badge blue">Dual-Track Quotas</span>
+          </h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+            Independent quota allowances and recovery schedules partitioned strictly at the step level (Zero cross-track contamination)
+          </p>
+        </div>
+        <div class="badges">
+          <span id="desktop-sync-badge" class="badge green">● Live Desktop Sync</span>
+          <button id="btn-auto-refresh" class="badge" style="cursor: pointer; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--accent-green); font-size: 0.6875rem; padding: 2px 8px; font-weight: 600;" title="Toggle automatic live refresh">
+            🔄 Live Auto-Refresh: ON (30s)
+          </button>
+          <span class="badge blue">Cost-Weighted Quota</span>
+          <span class="badge purple">Dynamic Family Routing</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: stretch;">
+        <!-- Provider Silo 1: Gemini Models -->
+        <div class="quota-box" id="provider-card-gemini" style="background: var(--quota-bg); border: 1px solid var(--quota-border); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="quota-silo-header">
+              <div>
+                <div class="quota-silo-title">
+                  <span>Gemini Models</span>
+                  <span id="gemini-spillover-badge" class="badge blue" style="font-size: 0.7rem; padding: 2px 8px;">Credit Spillover</span>
+                  <span id="gemini-exhaustion-badge" class="badge" style="display: none; font-size: 0.7rem; padding: 2px 8px;"></span>
+                </div>
+                <div class="quota-silo-sub">Flash &amp; Pro Family • Subagent Fast Track</div>
+              </div>
+              <span class="code-pill">Track 1</span>
+            </div>
+
+            <!-- Gemini Weekly Allowance -->
+            <div style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+                <span>WEEKLY ALLOWANCE</span>
+                <span id="gemini-weekly-pct" class="highlight-green" style="font-weight: 700; font-size: 0.9375rem;">100% Available</span>
+              </div>
+              <div class="progress-bar-bg" style="margin: 6px 0 8px 0;">
+                <div class="progress-bar-fill" id="gemini-weekly-progress" style="width: 100%;"></div>
+              </div>
+              <div id="gemini-weekly-sub" style="font-size: 0.8125rem; color: var(--text-muted);">
+                It will fully refresh in 6 days, 19 hours • Resets Sunday 17:58 UTC
+              </div>
+            </div>
+
+            <!-- Gemini 5h Burst Allowance -->
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+                <span>5-HOUR ROLLING BURST</span>
+                <span id="gemini-5h-pct" class="highlight-blue" style="font-weight: 700; font-size: 0.9375rem;">100% Available</span>
+              </div>
+              <div class="progress-bar-bg" style="margin: 6px 0 8px 0;">
+                <div class="progress-bar-fill" id="gemini-5h-progress" style="width: 100%;"></div>
+              </div>
+              <div id="gemini-5h-sub" style="font-size: 0.8125rem; color: var(--text-muted);">
+                Fully refreshed • 0 tokens in 5h window • Backed by 2,500 AI credits bank
+              </div>
+              <!-- Quota Paused Notice (visible when weekly exhausted) -->
+              <div id="timeline-paused-notice" style="display: none; margin-top: 8px; padding: 6px 10px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; font-size: 0.72rem; color: var(--text-muted);">
+                5-Hour tokens age out continuously, but Gemini requests remain locked until <span id="timeline-paused-reset"></span>.
+              </div>
+              <!-- 5-Hour Active Sessions Drawer (M3) -->
+              <div id="burst-sessions-drawer"></div>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <span>Primary Core:</span>
+            <span style="font-weight: 600; color: var(--accent-green); font-family: monospace; display: inline-flex; align-items: center; gap: 4px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span> Gemini 3.8 Flash (High)
+            </span>
+          </div>
+        </div>
+
+        <!-- Provider Silo 2: Weekly Quota Runway & Throttle Governor (ADR-031 Hero) -->
+        <div class="quota-box" id="provider-card-runway" style="background: var(--quota-bg); border: 1.5px solid rgba(14, 165, 233, 0.4); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+          <div>
+            <div class="quota-silo-header">
+              <div>
+                <div class="quota-silo-title">
+                  <span>Weekly Quota Runway</span>
+                  <span id="runway-badge" class="badge green" style="font-size: 0.7rem; padding: 2px 8px;">On Track (0.93x)</span>
+                </div>
+                <div class="quota-silo-sub">Dual-Benchmark Throttle &amp; Pacing Governor</div>
+              </div>
+              <span class="code-pill" id="runway-reset-text">Reset in 2d 14h</span>
+            </div>
+
+            <!-- Sacred Dual Benchmark Bar (Units & Scale Never Invert) -->
+            <div style="margin-bottom: 12px;" id="runway-dual-bar">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">
+                <span>Weekly Consumed vs. Calendar Elapsed</span>
+                <span id="runway-consumed-pct" class="highlight-green" style="font-weight: 700; font-family: monospace;">54.0% Consumed</span>
+              </div>
+              <div class="progress-bar-bg" style="position: relative; margin: 6px 0 6px 0; height: 12px; overflow: hidden; border-radius: 9999px;">
+                <div class="progress-bar-fill" id="runway-bar-fill" style="width: 54%; height: 100%; border-radius: 9999px; transition: all 0.5s ease;"></div>
+                <div id="runway-ceiling-marker" style="position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed #94a3b8; z-index: 8; left: 57.1%; transition: left 0.5s ease;" title="Day 4 Ceiling Marker: 57.1%"></div>
+                <div id="runway-time-needle" style="position: absolute; top: 0; bottom: 0; width: 2px; background: #0ea5e9; z-index: 10; left: 58%; box-shadow: 0 0 4px #0ea5e9;" title="Time Elapsed Marker"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted);">
+                <span style="font-family: monospace;">0%</span>
+                <span id="runway-time-legend" style="display: flex; align-items: center; gap: 8px; font-family: monospace;">
+                  <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #0ea5e9;"></span> Time: 58% (Day 4.1/7)
+                  </span>
+                  <span style="color: var(--card-border);">•</span>
+                  <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span style="display: inline-block; width: 6px; height: 2px; background: #94a3b8;"></span> Day 4 ceiling: 57.1%
+                  </span>
+                </span>
+                <span style="font-family: monospace;">100%</span>
+              </div>
+            </div>
+
+            <!-- 3-Pillar KPI Grid -->
+            <div class="runway-kpi-grid">
+              <div class="runway-kpi-tile">
+                <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Velocity (BVI)</div>
+                <div id="runway-bvi-val" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--text-main); margin-top: 2px;">0.93x</div>
+                <div id="runway-bvi-sub" style="font-size: 0.68rem; color: var(--accent-green); margin-top: 2px;">Safe pace</div>
+              </div>
+              <div class="runway-kpi-tile">
+                <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Daily Target</div>
+                <div id="runway-daily-target" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--text-main); margin-top: 2px;">15.8%</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">budget / day</div>
+              </div>
+              <div class="runway-kpi-tile">
+                <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Exhaustion</div>
+                <div id="runway-exhaustion-val" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--accent-green); margin-top: 2px;">None</div>
+                <div id="runway-exhaustion-sub" style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">Survives to reset</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ZERO LAYOUT SHIFT FOOTER: In-Place Burst Governor -->
+          <div id="runway-burst-footer" style="min-height: 38px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card-bg); display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; margin-top: 14px; transition: all 0.3s ease;">
+            <div id="runway-burst-left" style="display: flex; align-items: center; gap: 6px;">
+              <span style="color: var(--text-muted);">5h Burst Governor:</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: var(--accent-green);">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span> Normal (21% used)
+              </span>
+            </div>
+            <div id="runway-burst-right" style="font-family: monospace; font-size: 0.72rem; color: var(--text-muted);">
+              No cooldown
+            </div>
+          </div>
+        </div>
+
+        <!-- Provider Silo 3: Claude and GPT Models (Replaced 5h Recovery) -->
+        <div class="quota-box" id="provider-card-claude" style="background: var(--quota-bg); border: 1px solid var(--quota-border); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="quota-silo-header">
+              <div>
+                <div class="quota-silo-title">
+                  <span>Claude &amp; GPT Models</span>
+                  <span class="badge amber" style="font-size: 0.7rem; padding: 2px 8px;">Hard-Blocking</span>
+                </div>
+                <div class="quota-silo-sub">Sonnet 4.6 • Opus 4.6 • GPT-OSS 120B</div>
+              </div>
+              <span class="code-pill">Track 2</span>
+            </div>
+
+            <!-- Claude/GPT Weekly Allowance -->
+            <div style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+                <span>WEEKLY ALLOWANCE</span>
+                <span id="claude-weekly-pct" class="highlight-purple" style="font-weight: 700; font-size: 0.9375rem;">100% Available</span>
+              </div>
+              <div class="progress-bar-bg" style="margin: 6px 0 8px 0;">
+                <div class="progress-bar-fill purple" id="claude-weekly-progress" style="width: 100%;"></div>
+              </div>
+              <div id="claude-weekly-sub" style="font-size: 0.8125rem; color: var(--text-muted);">
+                Fully refreshed • 7-day rolling window
+              </div>
+            </div>
+
+            <!-- Claude/GPT 5h Burst Allowance -->
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+                <span>5-HOUR ROLLING BURST</span>
+                <span id="claude-5h-pct" class="highlight-amber" style="font-weight: 700; font-size: 0.9375rem;">100% Available</span>
+              </div>
+              <div class="progress-bar-bg" style="margin: 6px 0 8px 0;">
+                <div class="progress-bar-fill amber" id="claude-5h-progress" style="width: 100%;"></div>
+              </div>
+              <div id="claude-5h-sub" style="font-size: 0.8125rem; color: var(--text-muted);">
+                Fully refreshed • 0 tokens in 5h window • 0 credit spillover (hard-blocks on limit)
+              </div>
+
+              <!-- Standby Capacity Reserve Widget (Symmetrical Balance) -->
+              <div class="standby-capacity-box">
+                <span style="color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; font-weight: 500;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-purple);"></span> Fallback Reserve Capacity
+                </span>
+                <span style="font-weight: 600; color: var(--accent-purple); font-family: monospace; font-size: 0.72rem;">
+                  100% Ready (Zero Contamination)
+                </span>
+              </div>
+            </div>
+
+            <!-- Dynamic Fallback Callout (visible when Gemini weekly is exhausted) -->
+            <div id="claude-fallback-callout" style="display: none; margin-top: 12px; padding: 10px 14px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 8px; font-size: 0.8125rem;">
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span class="badge green" style="font-size: 0.7rem; padding: 2px 8px;">ACTIVE FALLBACK</span>
+                <span id="claude-fallback-pct" style="font-weight: 700; color: var(--accent-green);"></span>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">
+                Zero marginal cost — select Claude Sonnet 4.6 or GPT-OSS 120B in Antigravity to continue working.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer -->
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <span>Isolation Policy:</span>
+            <span style="font-weight: 600; color: var(--accent-amber); font-family: monospace;">
+              Zero Cross-Track Spillover
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. TOP-LEVEL TAB NAVIGATION -->
+
+      <!-- Model Allowance Matrix (What each model provided in 5h / 1w) -->
+    <div class="section-card">
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Model Allowance Matrix (5-Hour vs. Weekly Cycle)</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+            Token yields and context caching performance delivered by each Antigravity model in active windows
+          </p>
+        </div>
+        <div class="toggle-group">
+          <button id="btn-toggle-5h" class="active">5-Hour Window</button>
+          <button id="btn-toggle-1w">Weekly Cycle (Sun–Sun)</button>
+        </div>
+      </div>
+
+      <!-- Interactive vs. Subagent Breakdown Pills (M16) -->
+      <div id="subagent-partition-pills" style="display: flex; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; align-items: center;">
+        <span class="badge blue" id="pill-all-turns" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600;">All: Loading...</span>
+        <span class="badge green" id="pill-interactive" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600;">💬 Interactive: Loading...</span>
+        <span class="badge purple" id="pill-subagent" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600;">🤖 Subagents: Loading...</span>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table id="models-table">
+          <thead>
+            <tr>
+              <th>Model Name</th>
+              <th>Turns</th>
+              <th>Uncached Prompt</th>
+              <th>Cached Prompt</th>
+              <th>Total Input</th>
+              <th>Cache Hit %</th>
+              <th>Total Output (Thinking)</th>
+              <th>Total Processed</th>
+              <th>Avoided Cost</th>
+            </tr>
+          </thead>
+          <tbody id="models-tbody">
+            <tr>
+              <td colspan="9" class="empty-state">Loading model telemetry...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+      <!-- Lifetime KPI Summary Grid -->
+    <div class="grid-kpi">
+      <div class="kpi-card">
+        <div class="kpi-label">Lifetime Input Tokens</div>
+        <div class="kpi-value" id="kpi-total-input">0</div>
+        <div class="kpi-sub">
+          Cached: <span class="highlight-green" id="kpi-cached-tokens">0</span> |
+          Uncached: <span class="highlight-blue" id="kpi-uncached-tokens">0</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Lifetime Cache Hit Ratio</div>
+        <div class="kpi-value" id="kpi-cache-ratio">0.0%</div>
+        <div class="kpi-sub">Context cache reuse efficiency</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="kpi-cache-progress" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Lifetime Output Tokens</div>
+        <div class="kpi-value" id="kpi-total-output">0</div>
+        <div class="kpi-sub">
+          Thinking: <span class="highlight-purple" id="kpi-thinking-tokens">0</span> |
+          Answer: <span id="kpi-answer-tokens">0</span>
+        </div>
+      </div>
+    </div>
+
+      <!-- Quick Recent Active Sessions -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Recent Active Sessions</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Latest conversation activity and context cache efficiency
+            </p>
+          </div>
+          <button class="btn-secondary" onclick="switchTab('tab-sessions')" style="font-size: 0.75rem; padding: 4px 10px; cursor: pointer;">
+            Explore All Sessions in Sessions Tab &rarr;
+          </button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="recent-sessions-table">
+            <thead>
+              <tr>
+                <th>Conversation Title</th>
+                <th>Workspace</th>
+                <th>Turns</th>
+                <th>Total Input</th>
+                <th>Cache %</th>
+                <th>Coverage</th>
+                <th>Avoided Cost</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recent-sessions-tbody">
+              <tr><td colspan="8" class="empty-state">Loading recent sessions...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- /view-now -->
+
+    <!-- VIEW 2: Sessions -->
+    <div id="view-sessions" class="tab-view" style="display: none;">
+      <!-- Controls & Search Toolbar -->
+      <div class="section-card" style="margin-bottom: 20px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; justify-content: space-between;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+            <div>
+              <label for="convo-search-input" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Search Sessions</label>
+              <input type="text" id="convo-search-input" placeholder="Filter title, ID or workspace..." class="form-control" style="width: 260px; font-size: 0.8125rem;" oninput="onConvoSearchChange()" />
+            </div>
+            <div>
+              <label for="workspace-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Workspace</label>
+              <select id="workspace-filter" style="min-width: 180px; font-size: 0.8125rem;">
+                <option value="all">All Workspaces</option>
+              </select>
+            </div>
+            <div>
+              <label for="convo-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Conversation</label>
+              <select id="convo-filter" style="max-width: 320px; font-size: 0.8125rem;">
+                <option value="all">All Conversations (Aggregated)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <button id="btn-clear-filters" class="btn-secondary" onclick="clearConvoFilters()" style="font-size: 0.8125rem; padding: 6px 12px; cursor: pointer;">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cache-Efficiency Coaching & Model-Flip Diagnostics (ADR-038 / M5) -->
+      <div id="cache-coaching-section" style="margin-bottom: 20px;"></div>
+
+      <!-- Conversations Overview Section -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Conversations Explorer</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Click column headers to sort, or click any conversation to inspect step-level turns
+            </p>
+          </div>
+          <span style="font-size: 0.8125rem; color: var(--text-muted);" id="convo-table-count">0 items</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="conversations-table">
+            <thead>
+              <tr>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('title')" title="Sort by Title">Conversation Title ⇕</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('workspace')" title="Sort by Workspace">Workspace ⇕</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('turns')" title="Sort by Turns">Turns ⇕</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('input')" title="Sort by Input">Total Input ⇕</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('cache')" title="Sort by Cache %">Cache % ⇕</th>
+                <th>Subscription Coverage</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('overage')" title="Sort by Overage">Actual Overage ⇕</th>
+                <th style="cursor: pointer;" onclick="toggleConvoSort('cost')" title="Sort by Avoided Cost">Avoided Cost ⇕</th>
+              </tr>
+            </thead>
+            <tbody id="conversations-tbody">
+              <tr>
+                <td colspan="8" class="empty-state">No telemetry data loaded. Run <code>python3 scripts/export_dashboard.py</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Turn-by-Turn Inspection Section -->
+      <div class="section-card" id="turns-card" style="display: none; margin-top: 24px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="turns-title">Turn-by-Turn Telemetry Inspection</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Per-step token breakdown, reasoning tokens, cache hit rates, and coverage status
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);" id="turns-table-count">0 turns</span>
+            <button class="btn-secondary" onclick="closeTurnsCard()" style="font-size: 0.75rem; padding: 4px 8px; cursor: pointer;">Close &times;</button>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="turns-table">
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Timestamp</th>
+                <th>Model</th>
+                <th>Uncached Prompt</th>
+                <th>Cached Prompt</th>
+                <th>Total Input</th>
+                <th>Cache %</th>
+                <th>Output (Thinking + Answer)</th>
+                <th>Coverage Status</th>
+                <th>Avoided Cost</th>
+                <th>Response ID</th>
+              </tr>
+            </thead>
+            <tbody id="turns-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- /view-sessions -->
+
+    <!-- VIEW 3: Projects -->
+    <div id="view-projects" class="tab-view" style="display: none;">
+      <div class="grid-kpi" id="projects-portfolio-kpis">
+        <!-- Dynamic Portfolio KPI Cards -->
+      </div>
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Portfolio Projects &amp; Git Branch Costing</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Hierarchical token consumption, context caching efficiency, and inference cost by project and active Git branch
+            </p>
+          </div>
+          <div class="badges">
+            <span class="badge blue">Multi-Project</span>
+            <span class="badge purple">Git Branch Costing</span>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="projects-table">
+            <thead>
+              <tr>
+                <th>Project &amp; Filesystem Path</th>
+                <th>Branches</th>
+                <th>Turns</th>
+                <th>Total Input</th>
+                <th>Cache %</th>
+                <th>Subscription Coverage</th>
+                <th>Actual Overage</th>
+                <th>Avoided Cost</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-tbody">
+              <tr><td colspan="9" class="empty-state">Loading portfolio telemetry...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- /view-projects -->
+
+    <!-- VIEW 3: Swarms & Tools (ADR-037 / M24) -->
+    <div id="view-swarms" class="tab-view" style="display: none;">
+      <!-- Swarms & Tools KPI Banner (Token Economics, Cache Efficiency & Value Segregation) -->
+      <div class="kpi-grid" style="margin-bottom: 24px;">
+        <div class="kpi-card">
+          <div class="kpi-label">Autonomous Swarms &amp; Fleet</div>
+          <div class="kpi-value highlight-blue" id="kpi-swarm-count">0 Swarms</div>
+          <div class="kpi-sub" id="kpi-swarm-sub">0 subagents across 0 projects</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Total Swarm Tokens &amp; Cache</div>
+          <div class="kpi-value highlight-green" id="kpi-swarm-tokens">0</div>
+          <div class="kpi-sub" id="kpi-swarm-cache">0% cached (0 tokens)</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Token Velocity &amp; Reasoning</div>
+          <div class="kpi-value highlight-amber" id="kpi-swarm-pace">0 toks/turn</div>
+          <div class="kpi-sub" id="kpi-swarm-thinking">0 reasoning / thinking tokens</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Imputed API Value (Avoided Cost)</div>
+          <div class="kpi-value highlight-purple" id="kpi-swarm-avoided">£0.00</div>
+          <div class="kpi-sub" id="kpi-swarm-overage">100% Pro plan • £0.00 actual overage</div>
+        </div>
+      </div>
+
+      <!-- Subagent Swarm Lineage Explorer -->
+      <div class="section-card" style="margin-bottom: 24px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Subagent Swarm Lineage Explorer</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Parent-child execution topologies, token burn velocity, prompt cache efficiency, and 3-tier subagent routing
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="badge blue" id="swarm-runtime-tools-badge">10,197 Tool Invocations</span>
+            <span class="code-pill" id="swarm-selected-pill">Select a Swarm</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start;">
+          <!-- Left: Swarms Master List & Filter/Sort Controls -->
+          <div>
+            <div class="swarm-toolbar" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">
+                  Discovered Swarms (<span id="swarm-list-count">0</span>)
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <select id="swarm-project-filter" class="form-control" style="flex: 1.1; font-size: 0.75rem; padding: 5px 8px; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); border-radius: 6px;" onchange="handleSwarmFilterChange()">
+                  <option value="all">All Projects</option>
+                </select>
+                <select id="swarm-sort-select" class="form-control" style="flex: 0.9; font-size: 0.75rem; padding: 5px 8px; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); border-radius: 6px;" onchange="handleSwarmSortChange()">
+                  <option value="recent">⏱️ Recent</option>
+                  <option value="tokens">📊 Tokens</option>
+                  <option value="cache">⚡ Cache %</option>
+                  <option value="subagents">🤖 Subagents</option>
+                  <option value="value">💡 Value</option>
+                </select>
+              </div>
+            </div>
+            <div id="swarm-list-container" style="max-height: 600px; overflow-y: auto; padding-right: 6px;">
+              <!-- Dynamic Swarm Cards -->
+            </div>
+          </div>
+
+          <!-- Right: Swarm Detail & Interactive SVG DAG -->
+          <div>
+            <div id="swarm-detail-header" style="background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                <div>
+                  <h3 id="swarm-detail-title" style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px 0;">Select a swarm to inspect topology</h3>
+                  <div style="display: flex; gap: 8px; align-items: center; font-size: 0.75rem; color: var(--text-muted); flex-wrap: wrap;">
+                    <span id="swarm-detail-ws" class="badge" style="cursor: pointer;" title="Click to view in Projects tab">Workspace</span>
+                    <span id="swarm-detail-duration">⏱️ Duration: --</span>
+                    <span id="swarm-detail-subagents">🤖 Subagents: --</span>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <div id="swarm-detail-cost" style="font-size: 1.125rem; font-weight: 700; font-family: monospace; color: var(--accent-green);">£0.00 avoided</div>
+                  <div id="swarm-detail-overage" style="font-size: 0.72rem; color: var(--text-muted);">£0.00 actual overage (In Quota)</div>
+                </div>
+              </div>
+
+              <!-- Swarm Telemetry Ribbon (Token Metrics & Cache Breakdown) -->
+              <div id="swarm-telemetry-ribbon" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 10px 0; padding: 10px 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);">
+                <!-- Dynamic Telemetry Pills -->
+              </div>
+
+              <!-- Tier Distribution Pills -->
+              <div id="swarm-detail-tiers" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <!-- Dynamic Tier Pills -->
+              </div>
+            </div>
+
+            <!-- SVG DAG Canvas -->
+            <div style="position: relative;">
+              <div id="swarm-dag-container" style="width: 100%; min-height: 460px; background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; position: relative;">
+                <!-- Rendered SVG Tree / DAG -->
+              </div>
+
+              <!-- Node Hover / Click Detail Card -->
+              <div id="swarm-node-detail" style="display: none; margin-top: 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+                <!-- Node inspection info -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool Execution & Skill Performance Analytics -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Tool Execution &amp; Skill Performance Analytics</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Empirical frequency distributions, sandbox bypass ratios, and execution error rates across 10,000+ vault calls
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="badge blue" id="tool-total-badge">10,197 Total Calls</span>
+            <span class="badge amber" id="tool-bypass-badge">47.8% Sandbox Bypass</span>
+          </div>
+        </div>
+
+        <!-- Tool Categories Summary -->
+        <div id="tool-categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <!-- Category Cards -->
+        </div>
+
+        <!-- Tool Distribution Table -->
+        <div style="overflow-x: auto; margin-bottom: 24px;">
+          <table id="tools-table">
+            <thead>
+              <tr>
+                <th>Tool Name</th>
+                <th>Category</th>
+                <th>Invocations</th>
+                <th>Share of Total</th>
+                <th>Sandbox Bypass</th>
+                <th>Error Rate</th>
+              </tr>
+            </thead>
+            <tbody id="tools-tbody">
+              <tr><td colspan="6" class="empty-state">Loading tool analytics...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Skill Activations Section -->
+        <div>
+          <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">
+            Active Skills &amp; Specialized Capability Invocations
+          </h3>
+          <div id="skills-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+            <!-- Skill Cards -->
+          </div>
+        </div>
+      </div>
+    </div> <!-- /view-swarms -->
+
+    <!-- VIEW 4: Billing -->
+    <div id="view-billing" class="tab-view" style="display: none;">
+      <!-- Billing & Plan Financials Command Banner -->
+      <div class="quota-banner" style="margin-bottom: 24px;">
+        <!-- Monthly Pro Subscription (£18.99/mo) -->
+        <div class="quota-box">
+          <div class="quota-title">
+            <span id="quota-sub-tier-title">Google AI Ultra (20 TB - 5x AI Usage)</span>
+            <span class="code-pill" id="quota-sub-renewal-badge">Renews 13 Oct</span>
+          </div>
+          <div class="quota-value highlight-blue" id="quota-sub-price">£18.99</div>
+          <div class="quota-sub" id="quota-sub-status">
+            Renews in 19 days • £0 marginal cost in quota
+          </div>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+            Plan Value: <strong class="highlight-green" id="quota-sub-roi">£0.00 API equiv</strong> (<span id="quota-sub-roi-multiplier">0.0x ROI</span>)
+          </div>
+        </div>
+
+        <!-- Prepaid AI Credit Bank (2,500 Credits Add-on) -->
+        <div class="quota-box">
+          <div class="quota-title">
+            <span>Prepaid Overage Credits</span>
+            <span class="badge green" id="quota-credits-badge">0 Credits Burned</span>
+          </div>
+          <div class="quota-value highlight-green" id="quota-credits-remaining-hero">2,500 Left</div>
+          <div class="quota-sub" id="quota-bank-sub">
+            Pack: 2,500 credits (£23.99) • Debited outside quota
+          </div>
+          <div class="progress-bar-bg" style="margin-top: 8px;">
+            <div class="progress-bar-fill amber" id="quota-credits-progress" style="width: 0%"></div>
+          </div>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+            Burn: <strong class="highlight-amber" id="quota-credit-burn">£0.00</strong> (<span id="quota-credits-burned-count">0</span> credits) • Balance: <strong id="quota-bank-balance">£23.99</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historical Weekly Trends & 8–12 Week Trendline Chart (M4 / ADR-039) -->
+      <div class="section-card" id="weekly-trends-card" style="margin-bottom: 24px;">
+        <div class="section-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <h2 class="section-title">Historical Weekly Trends (Vault Archive)</h2>
+              <span class="badge blue" id="trends-cycle-count-badge">12 Cycles Analyzed</span>
+            </div>
+            <p id="trends-subtitle" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              8–12 week cycle history: token velocity, cache efficiency, developer API spend, and overage burn
+            </p>
+          </div>
+          <div class="toggle-group" id="trends-metric-toggles">
+            <button id="btn-trend-tokens" class="active">Tokens</button>
+            <button id="btn-trend-cost">Cost &amp; Overage</button>
+            <button id="btn-trend-bvi">Peak BVI</button>
+          </div>
+        </div>
+
+        <!-- 4-Metric Macro Ribbon -->
+        <div class="trends-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px;">
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">AVERAGE WEEKLY TOKENS</div>
+            <div id="trends-kpi-avg-tokens" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-blue); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">8–12 week rolling average</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">AVERAGE WEEKLY SPEND</div>
+            <div id="trends-kpi-avg-cost" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-green); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Developer API equivalent value</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">PEAK WEEK VOLUME</div>
+            <div id="trends-kpi-peak-tokens" style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; font-family: monospace;">—</div>
+            <div id="trends-kpi-peak-label" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Highest recorded week</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">RECENT VELOCITY</div>
+            <div id="trends-kpi-growth" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-purple); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">vs. previous completed cycle</div>
+          </div>
+        </div>
+
+        <!-- SVG Trendline Chart Container -->
+        <div id="weekly-trends-svg-container" style="position: relative; width: 100%; min-height: 240px; margin-bottom: 16px;">
+          <svg id="weekly-trends-svg" viewBox="0 0 760 220" style="width: 100%; height: auto; display: block; overflow: visible;"></svg>
+          <div id="weekly-trends-tooltip" class="trendline-tooltip" style="display: none; position: absolute; pointer-events: none; z-index: 50;"></div>
+        </div>
+
+        <!-- Historical Cycles Summary Table -->
+        <div style="overflow-x: auto;">
+          <table id="weekly-trends-table">
+            <thead>
+              <tr>
+                <th id="th-weekly-cycle">Weekly Cycle Window</th>
+                <th>Turns</th>
+                <th>Processed Tokens</th>
+                <th>Cache Hit Ratio</th>
+                <th>API Value / Cost</th>
+                <th>Overage Burn</th>
+                <th>Peak BVI</th>
+                <th>Cycle Status</th>
+              </tr>
+            </thead>
+            <tbody id="weekly-trends-tbody">
+              <tr>
+                <td colspan="8" class="empty-state">Loading historical weekly trends...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Google One AI Credit Activity Reconciliation (Official Billing Alignment) -->
+      <div class="section-card" id="credit-reconciliation-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Google One AI Credit Activity Reconciliation</h2>
+            <p id="reconciliation-subtitle" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Deterministic hourly deductions reconciling with the official Google One activity statement (£23.99 / 2,500 credits = £0.0096 / credit)
+            </p>
+          </div>
+          <div>
+            <span class="badge amber" id="reconciliation-total-badge">0 Credits Burned</span>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="reconciliation-table">
+            <thead>
+              <tr>
+                <th>Billing Hour (UTC)</th>
+                <th>Activity Description</th>
+                <th>Turns Count</th>
+                <th>AI Credits Deducted</th>
+                <th id="th-cash-burn">Cash Burn (£0.0096/credit)</th>
+                <th>Compute Attribution</th>
+              </tr>
+            </thead>
+            <tbody id="reconciliation-tbody">
+              <tr>
+                <td colspan="6" class="empty-state">No AI credit deductions recorded. Usage within Pro subscription quota.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div> <!-- /view-billing -->
+
+    <!-- VIEW 5: Plan -->
+    <div id="view-plan" class="tab-view" style="display: none;">
+      <div class="section-card" style="margin-bottom: 24px;">
+        <div class="section-header" style="align-items: flex-start;">
+          <div>
+            <h2 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <span>Interactive What-If Workload Simulator &amp; Quota Stress Planner</span>
+              
+            </h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">
+              Simulate multi-agent swarm token burn, test 5h burst exhaustion boundaries, predict HTTP 429 lockouts, and evaluate plan tier capacity (Pro vs Enterprise 5x vs Ultra 10x).
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Baseline:</label>
+            <select id="sim-baseline-select" class="badge" style="background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;" onchange="onSimulatorInputChange()">
+              <option value="live">Current Live Quota</option>
+              <option value="fresh">Fresh (0% Used Baseline)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Archetype Quick-Select Carousel -->
+        <div style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Multi-Agent Archetype Presets</span>
+            <select id="sim-archetype-select" style="display: none;" onchange="onArchetypeSelectChange(this.value)">
+              <option value="custom">Custom</option>
+              <option value="deep_refactor_swarm">Deep Refactor Swarm</option>
+              <option value="codebase_audit">Codebase Audit &amp; Security Scan</option>
+              <option value="rapid_prototyping_burst">Rapid Prototyping Burst</option>
+              <option value="claude_opus_deep_dive">Claude Opus 4.6 Stress Test</option>
+              <option value="subagent_fleet">Subagent Fleet (Lite/Fast)</option>
+            </select>
+          </div>
+          <div class="sim-archetypes-row" id="sim-archetypes-container">
+            <div class="sim-archetype-card active" data-archetype="deep_refactor_swarm" onclick="selectArchetypePreset('deep_refactor_swarm')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">🤖 Deep Refactor Swarm</span>
+                <span class="code-pill">40 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.1 Pro High • 120k prompt • 88% cache • 8k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="codebase_audit" onclick="selectArchetypePreset('codebase_audit')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">🔍 Codebase Audit</span>
+                <span class="code-pill">60 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.8 Flash High • 200k prompt • 94% cache • 2.5k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="rapid_prototyping_burst" onclick="selectArchetypePreset('rapid_prototyping_burst')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">⚡ Rapid Prototyping</span>
+                <span class="code-pill">25 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.8 Flash Medium • 45k prompt • 75% cache • 1.5k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="claude_opus_deep_dive" onclick="selectArchetypePreset('claude_opus_deep_dive')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">⚠️ Claude Opus Stress</span>
+                <span class="code-pill" style="color: var(--accent-red); border-color: var(--accent-red);">35 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Claude Opus 4.6 • 95k prompt • 92% cache • 6k thinking (Exhaustion Test)</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="subagent_fleet" onclick="selectArchetypePreset('subagent_fleet')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">🐝 Subagent Fleet</span>
+                <span class="code-pill">100 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini Flash Lite • 30k prompt • 85% cache • 500 thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="custom" onclick="selectArchetypePreset('custom')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem;">🛠 Custom Swarm</span>
+                <span class="code-pill">Sliders</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Fully customized parameters for bespoke agent topologies</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Simulation Layout -->
+        <div class="sim-grid">
+          <!-- Left Column: Interactive Controls -->
+          <div style="background: var(--card-hover); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px;">
+            <h3 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>Workload Parameters</span>
+            </h3>
+
+            <!-- Model Selector -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-model-select">Model &amp; Provider Track</label>
+                <span id="sim-track-badge" class="code-pill">Track 1: Gemini</span>
+              </div>
+              <select id="sim-model-select" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-size: 0.875rem;" onchange="onSimulatorInputChange()">
+                <optgroup label="Track 1: Gemini Models (AI Credit Spillover Supported)">
+                  <option value="1318">Gemini 3.8 Flash (High) - [1318]</option>
+                  <option value="1319">Gemini 3.8 Flash (Medium) - [1319]</option>
+                  <option value="1016" selected>Gemini 3.1 Pro (High) - [1016]</option>
+                  <option value="1036">Gemini 3.1 Pro (Low Reasoning) - [1036]</option>
+                  <option value="1050">Gemini Flash Lite (Subagent Tier 1) - [1050]</option>
+                  <option value="1298">Gemini 3.7 Flash (High) - [1298]</option>
+                </optgroup>
+                <optgroup label="Track 2: Claude &amp; GPT Models (Zero Credit Spillover - Hard 429)">
+                  <option value="1026">Claude Opus 4.6 (Thinking) - [1026]</option>
+                  <option value="1035">Claude Sonnet 4.6 (Thinking) - [1035]</option>
+                  <option value="342">GPT-OSS 120B (Medium) - [342]</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Subscription Plan Tier -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-plan-select">Plan Tier Profile</label>
+                <span id="sim-plan-badge" class="code-pill">1x Capacity</span>
+              </div>
+              <select id="sim-plan-select" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-size: 0.875rem;" onchange="onSimulatorInputChange()">
+                <option value="plus_2tb">Google AI Plus (2 TB) ($10 5h / $65 wk)</option>
+                <option value="pro" selected>Google AI Pro (2 TB / 5 TB / 10 TB) ($20 5h / $129 wk)</option>
+                <option value="ultra_5x">Google AI Ultra (20 TB) 5x ($100 5h / $645 wk)</option>
+                <option value="ultra_20x">Google AI Ultra (30 TB) 20x ($400 5h / $2580 wk)</option>
+                <option value="enterprise_5x" style="display: none;">Google AI Ultra (20 TB) 5x ($100 5h / $645 wk)</option>
+                <option value="ultra_10x" style="display: none;">Google AI Ultra Max 10x ($200 5h / $1290 wk)</option>
+              </select>
+            </div>
+
+            <!-- Turn Count Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-turns-slider">Turn Count</label>
+                <span class="sim-control-val" id="sim-turns-val">40 turns</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-turns-slider" min="1" max="150" value="40" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Prompt Context Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-prompt-slider">Average Prompt Context ($C_{prompt}$)</label>
+                <span class="sim-control-val" id="sim-prompt-val">120,000 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-prompt-slider" min="1000" max="500000" step="1000" value="120000" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Cache Hit Ratio Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-cache-slider">Cache Hit Ratio ($R_{cache}$)</label>
+                <span class="sim-control-val" id="sim-cache-val">88%</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-cache-slider" min="0" max="99" value="88" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Thinking Token Depth Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-thinking-slider">Thinking Token Depth ($T_{thinking}$)</label>
+                <span class="sim-control-val" id="sim-thinking-val">8,000 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-thinking-slider" min="0" max="32000" step="500" value="8000" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Candidate Answer Output Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-output-slider">Candidate Answer Output ($T_{answer}$)</label>
+                <span class="sim-control-val" id="sim-output-val">1,500 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-output-slider" min="200" max="8000" step="100" value="1500" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Turn Pacing Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-pace-slider">Session Pacing ($\Delta t$)</label>
+                <span class="sim-control-val" id="sim-pace-val">2.5 min/turn</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-pace-slider" min="0.2" max="10.0" step="0.1" value="2.5" oninput="onSimulatorInputChange()">
+            </div>
+
+            <div style="font-size: 0.6875rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 12px;">
+              💡 <em>Pure-Python client simulation: recalculates deterministically on slider input without network roundtrips.</em>
+            </div>
+          </div>
+
+          <!-- Right Column: Predictive Stress Outcomes -->
+          <div>
+            <!-- Hero Safety Gauge & Status Card -->
+            <div class="section-card" style="margin-bottom: 20px; border-left: 4px solid var(--accent-blue);" id="sim-status-hero">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Forecasted Quota Health</span>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                    <span id="sim-status-badge" class="badge green" style="font-size: 0.9375rem; padding: 4px 10px;">Safe Zone</span>
+                    <span id="sim-risk-badge" class="code-pill">Low Risk</span>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">5h Burst Headroom</span>
+                  <div style="font-size: 1.5rem; font-weight: 800; font-family: monospace; color: var(--text-main);" id="sim-gauge-pct">
+                    74.2% Available
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gauge Progress Bar -->
+              <div class="progress-bar-bg" style="height: 10px; border-radius: 5px; margin-bottom: 12px;">
+                <div id="sim-gauge-fill" class="progress-bar-fill" style="width: 25.8%; background: var(--accent-green);"></div>
+              </div>
+
+              <!-- Recommendation Text -->
+              <div id="sim-recommendation" style="font-size: 0.8125rem; color: var(--text-main); line-height: 1.5; background: var(--card-hover); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--card-border);">
+                Safe to execute: Planned workload comfortably fits within active 5-hour rolling capacity with zero credit deduction or throttling risk.
+              </div>
+            </div>
+
+            <!-- 4 Metric KPI Cards -->
+            <div class="sim-kpi-grid">
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">5-Hour Burst Load</div>
+                <div class="sim-kpi-val" id="sim-kpi-burst-val">$5.16 / $20.00</div>
+                <div class="sim-kpi-sub" id="sim-kpi-burst-sub">25.8% consumed • Safe</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">Weekly Runway Impact</div>
+                <div class="sim-kpi-val" id="sim-kpi-weekly-val">+4.0% load</div>
+                <div class="sim-kpi-sub" id="sim-kpi-weekly-sub">$5.16 of $129.00 weekly</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">Imputed Developer Value</div>
+                <div class="sim-kpi-val" id="sim-kpi-cost-val">£4.08</div>
+                <div class="sim-kpi-sub" id="sim-kpi-cost-sub">$5.16 API value (Covered)</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">HTTP 429 &amp; Spillover Risk</div>
+                <div class="sim-kpi-val" id="sim-kpi-risk-val" style="color: var(--accent-green);">0 Credits</div>
+                <div class="sim-kpi-sub" id="sim-kpi-risk-sub">Zero out-of-pocket credit burn</div>
+              </div>
+            </div>
+
+            <!-- SVG Quota Trajectory Preview Card -->
+            <div class="sim-trajectory-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.8125rem; font-weight: 700;">📈 Turn-by-Turn Headroom Trajectory</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="sim-trajectory-legend">• Headroom vs 100% Burst Boundary</span>
+              </div>
+              <div style="width: 100%; height: 160px;">
+                <svg id="sim-trajectory-svg" viewBox="0 0 500 160" preserveAspectRatio="none" style="width: 100%; height: 100%; overflow: visible;">
+                  <!-- Trajectory chart dynamically rendered by JS -->
+                </svg>
+              </div>
+            </div>
+
+            <!-- Plan Tier Sensitivity Comparison Table -->
+            <div class="sim-trajectory-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.8125rem; font-weight: 700;">⚖️ Subscription Tier Headroom Comparison</span>
+                <span class="code-pill">Same Workload Across Tiers</span>
+              </div>
+              <div style="overflow-x: auto;">
+                <div id="sim-tier-comparison">
+                  <table class="sim-tier-table">
+                    <thead>
+                      <tr>
+                        <th>Tier Profile</th>
+                        <th>5h Capacity</th>
+                        <th>Burst Used</th>
+                        <th>Status</th>
+                        <th>Exhaustion Turn</th>
+                        <th>AI Credit Spillover</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sim-tier-tbody">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Profile & Promotion Manager Section -->
+      <div class="section-card" id="plan-manager-card" style="margin-top: 24px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Plan Profiles, Overlays &amp; Rate Cards</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Manage active subscription tiers, register capacity promotions, and inspect model rate cards
+            </p>
+          </div>
+        </div>
+
+        <!-- Plan Sub-Tabs -->
+        <div class="modal-tabs" style="margin-bottom: 16px;">
+          <button class="modal-tab-btn active" id="modal-tab-plan" data-modaltab="plan">Active Plan &amp; Switcher</button>
+          <button class="modal-tab-btn" id="modal-tab-promos" data-modaltab="promos">Capacity Promotions &amp; Overlays</button>
+          <button class="modal-tab-btn" id="modal-tab-rates" data-modaltab="rates">Rate Cards &amp; Availability</button>
+          <button class="modal-tab-btn" id="modal-tab-json" data-modaltab="json">JSON Config Sync</button>
+        </div>
+
+        <div class="modal-body" style="padding: 0;">
+          <!-- View 1: Active Plan & Switcher -->
+        <div id="modal-view-plan" class="modal-tab-content">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <!-- Active Plan Summary Box -->
+            <div style="background: var(--quota-bg); border: 1px solid var(--quota-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
+                Current Active Plan
+              </div>
+              <div id="modal-active-plan-name" style="font-size: 1.0625rem; font-weight: 700; color: var(--text-main);">
+                Google One AI Premium (Antigravity Pro)
+              </div>
+              <div id="modal-active-plan-prices" style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; font-family: monospace;">
+                £18.99 / $19.99 per month • Renews day 24
+              </div>
+              <div style="margin-top: 12px; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                  <span style="color: var(--text-muted); white-space: nowrap;">Gemini 5h / Weekly:</span>
+                  <span id="modal-active-gemini-cap" style="font-weight: 600; color: var(--text-main); font-family: monospace; white-space: nowrap;">$20.00 / $129.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                  <span style="color: var(--text-muted); white-space: nowrap;">Claude 5h / Weekly:</span>
+                  <span id="modal-active-claude-cap" style="font-weight: 600; color: var(--text-main); font-family: monospace; white-space: nowrap;">$10.00 / $35.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Switch Plan Form -->
+            <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">
+                Switch / Schedule Plan Tier Change
+              </div>
+              <div class="form-group">
+                <label for="plan-tier-select">Select Plan Profile Preset</label>
+                <select id="plan-tier-select" class="form-control">
+                  <option value="free">Free Tier (Personal Google Account) — £0.00/mo</option>
+                  <option value="plus_2tb">Google AI Plus (2 TB) — £7.99/mo</option>
+                  <option value="pro" selected>Google AI Pro (2 TB) — £18.99/mo</option>
+                  <option value="pro_5tb">Google AI Pro (5 TB) — £29.99/mo</option>
+                  <option value="pro_10tb">Google AI Pro (10 TB) — £39.99/mo</option>
+                  <option value="ultra_5x">Google AI Ultra (20 TB - 5x AI Usage) — £79.99/mo</option>
+                  <option value="ultra_20x">Google AI Ultra (30 TB - 20x AI Usage) — £189.99/mo</option>
+                  <option value="enterprise_5x" style="display: none;">Google AI Ultra (20 TB - 5x AI Usage) — £79.99/mo</option>
+                  <option value="ultra_10x" style="display: none;">Google AI Ultra Max (10x Quota) — £99.99/mo</option>
+                  <option value="custom">Custom Capacity Plan...</option>
+                </select>
+              </div>
+              <!-- Dynamic Custom Plan Inputs -->
+              <div id="plan-custom-fields" style="display: none; margin-bottom: 12px; padding: 12px; background: var(--quota-bg); border-radius: 8px; border: 1px solid var(--card-border);">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Custom Plan Parameters</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-fee-gbp" style="font-size: 0.75rem;">Monthly Fee (£)</label>
+                    <input type="number" id="custom-fee-gbp" class="form-control" step="0.01" min="0" value="0.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-fee-usd" style="font-size: 0.75rem;">Monthly Fee ($)</label>
+                    <input type="number" id="custom-fee-usd" class="form-control" step="0.01" min="0" value="0.00" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-gemini-5h" style="font-size: 0.75rem;">Gemini 5h Limit ($)</label>
+                    <input type="number" id="custom-gemini-5h" class="form-control" step="1.0" min="1" value="20.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-gemini-weekly" style="font-size: 0.75rem;">Gemini Weekly ($)</label>
+                    <input type="number" id="custom-gemini-weekly" class="form-control" step="1.0" min="1" value="129.00" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-claude-5h" style="font-size: 0.75rem;">Claude 5h Limit ($)</label>
+                    <input type="number" id="custom-claude-5h" class="form-control" step="1.0" min="0" value="10.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-claude-weekly" style="font-size: 0.75rem;">Claude Weekly ($)</label>
+                    <input type="number" id="custom-claude-weekly" class="form-control" step="1.0" min="0" value="35.00" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="plan-effective-date">Effective From Date (UTC)</label>
+                <input type="date" id="plan-effective-date" class="form-control" />
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+                <button id="btn-save-plan" class="btn-primary">Apply Plan Profile</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscription History Timeline -->
+          <div>
+            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+              Plan History &amp; Historical Provenance Intervals
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--card-border); text-align: left; color: var(--text-muted);">
+                    <th style="padding: 8px;">Tier</th>
+                    <th style="padding: 8px;">Plan Name</th>
+                    <th style="padding: 8px;">Effective From</th>
+                    <th style="padding: 8px;">Effective To</th>
+                    <th style="padding: 8px;">Monthly Fee</th>
+                    <th style="padding: 8px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="plan-history-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 2: Capacity Promotions -->
+        <div id="modal-view-promos" class="modal-tab-content" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); text-transform: uppercase;">Active &amp; Scheduled Capacity Overlays</span>
+            </div>
+            <div id="promotions-list">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Register Promotion Form -->
+          <div style="background: var(--quota-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; margin-top: 16px;">
+            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; text-transform: uppercase;">
+              Register New Capacity Promotion
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+              <div class="form-group">
+                <label for="promo-name-input">Promotion Name</label>
+                <input type="text" id="promo-name-input" class="form-control" placeholder="e.g. Summer 2x Boost" />
+              </div>
+              <div class="form-group">
+                <label for="promo-provider-select">Target Provider</label>
+                <select id="promo-provider-select" class="form-control">
+                  <option value="gemini">Gemini Models</option>
+                  <option value="claude_gpt">Claude &amp; GPT Models</option>
+                  <option value="all">All Providers</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="promo-multiplier-input">Capacity Multiplier</label>
+                <input type="number" id="promo-multiplier-input" class="form-control" step="0.1" min="1.0" max="10.0" value="2.0" />
+              </div>
+              <div class="form-group">
+                <label for="promo-from-input">Valid From</label>
+                <input type="date" id="promo-from-input" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="promo-to-input">Valid To</label>
+                <input type="date" id="promo-to-input" class="form-control" />
+              </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+              <button id="btn-add-promo" class="btn-primary">Register Promotion</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 3: Model Rate Cards & Availability -->
+        <div id="modal-view-rates" class="modal-tab-content" style="display: none;">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase;">
+            Model Pricing Rate Revisions &amp; Availability Lifecycle
+          </div>
+          <div style="overflow-x: auto; max-height: 400px;">
+            <table id="rate-history-table" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--card-border); text-align: left; color: var(--text-muted);">
+                  <th style="padding: 8px;">Model ID</th>
+                  <th style="padding: 8px;">Model Name &amp; Reasoning</th>
+                  <th style="padding: 8px;">Status</th>
+                  <th style="padding: 8px;">Effective Interval</th>
+                  <th style="padding: 8px;">Prompt Uncached</th>
+                  <th style="padding: 8px;">Prompt Cached</th>
+                  <th style="padding: 8px;">Output</th>
+                </tr>
+              </thead>
+              <tbody id="rate-history-tbody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- View 4: JSON Config Sync -->
+        <div id="modal-view-json" class="modal-tab-content" style="display: none;">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase;">
+            Live JSON Configuration (pricing.json)
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
+            Copy or download this JSON configuration to persist any plan adjustments or newly registered promotions into <code>config/pricing.json</code>.
+          </p>
+          <textarea id="modal-json-editor" class="form-control" style="height: 250px; font-family: monospace; font-size: 0.75rem; white-space: pre;" readonly></textarea>
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+            <button id="btn-copy-json" class="btn-secondary">📋 Copy to Clipboard</button>
+            <button id="btn-download-json" class="btn-primary">💾 Download pricing.json</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div> <!-- /view-plan -->
+
+<!-- CANONICAL DATA HOOK (INJECTED BY EXPORTER) -->
+  <script id="injected-dashboard-data" type="application/json">{}</script>
+
+  <script src="app.js"></script>
+</body>
+</html>
