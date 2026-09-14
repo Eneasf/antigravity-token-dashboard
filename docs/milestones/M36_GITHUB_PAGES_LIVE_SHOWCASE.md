@@ -44,6 +44,8 @@ Key requirements and architectural constraints:
 
 ### 2.3 Continuous Deployment Pipeline (`.github/workflows/deploy_pages.yml`)
 - Automates GitHub Pages deployment upon push to `main` when dashboard or demo scripts change.
+- Runs only on the public repository (`if: github.repository == 'Eneasf/antigravity-token-dashboard'`), so pushes to the private development remote never attempt a Pages deploy.
+- Link-preview metadata (Open Graph / Twitter card) and a 1200x630 `dashboard/og-card.png` so shared links show a title, description and image.
 - Enforces pre-flight quality gates before deployment:
   - `python3 -m unittest tests/test_sanitization.py`
   - `python3 -m unittest tests/test_demo_showcase.py`

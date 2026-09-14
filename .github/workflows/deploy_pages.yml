@@ -22,6 +22,8 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    # Deploy only from the public showcase repo; the private dev remote has no Pages site.
+    if: github.repository == 'Eneasf/antigravity-token-dashboard'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

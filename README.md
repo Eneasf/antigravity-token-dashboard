@@ -5,7 +5,7 @@ A deterministic, zero-dependency, offline-first telemetry engine, live watcher d
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Stdlib)-success.svg)](antigravity_telemetry/)
-[![Release: v2.2.0](https://img.shields.io/badge/Release-v2.2.0-blue.svg)](docs/milestones/M36_GITHUB_PAGES_LIVE_SHOWCASE.md)
+[![Release: v2.2.1](https://img.shields.io/badge/Release-v2.2.1-blue.svg)](docs/milestones/M36_GITHUB_PAGES_LIVE_SHOWCASE.md)
 [![CI Test Suite](https://github.com/Eneasf/antigravity-token-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/Eneasf/antigravity-token-dashboard/actions)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success.svg)](https://eneasf.github.io/antigravity-token-dashboard/)
 [![Calibrated Models: 19](https://img.shields.io/badge/Models-19%20Canonical-purple.svg)](antigravity_telemetry/models.json)
