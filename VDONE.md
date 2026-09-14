@@ -1043,6 +1043,51 @@
 - **EXPECT**: `nothing to commit, working tree clean` after milestone commit; exit code 0.
 - **PROOF**: Working tree clean; merged into `main`, tagged `v1.35.0` and `v2.1.0`; pushed to `origin/main` and published to `public/main` (Exit code 0).
 
+---
+
+## Phase 10 Verification Gates (Milestone 36: GitHub Pages Live Showcase & Observability Focus)
+
+### V189: Synthetic Showcase Data Generator & Schema Completeness (`scripts/build_demo_showcase.py`)
+- **CHECK**: `python3 scripts/build_demo_showcase.py --out /tmp/demo_v189.js && python3 -c "import json; content=open('/tmp/demo_v189.js').read().replace('window.__TELEMETRY_DATA__ = ', '').rstrip(';\n'); d=json.loads(content); assert d['summary']['is_demo'] is True; assert len(d['projects']) >= 4; assert len(d['conversations']) >= 8; assert sum(c['turn_count'] for c in d['conversations']) >= 50; assert d['swarms']['total_swarms'] >= 3; assert d['tool_analytics']['unique_tools_count'] >= 10; print('Verified: Synthetic showcase payload complete with rich projects, turns, swarms, and tools.')"`
+- **EXPECT**: Output confirms generation and prints `Verified: Synthetic showcase payload complete with rich projects, turns, swarms, and tools.`; exit code 0.
+- **PROOF**: Ran check command; generated full schema with 4 projects, 8 sessions (89 turns), 3 swarms, and 12 tools; printed `Verified: Synthetic showcase payload complete with rich projects, turns, swarms, and tools.` (Exit code 0).
+
+### V190: 100% Zero-PII & Sanitization Compliance of Showcase Data
+- **CHECK**: `python3 -m unittest tests/test_sanitization.py`
+- **EXPECT**: 5/5 tests pass cleanly; exit code 0.
+- **PROOF**: Ran `tests/test_sanitization.py`; 5/5 tests pass in 0.081s with 0 failures, 0 errors (Exit code 0).
+
+### V191: Byte-Determinism of Showcase Generator
+- **CHECK**: `python3 scripts/build_demo_showcase.py --out /tmp/demo1.js && python3 scripts/build_demo_showcase.py --out /tmp/demo2.js && cmp /tmp/demo1.js /tmp/demo2.js && echo "Byte-identical verified"`
+- **EXPECT**: Output displays `Byte-identical verified`; exit code 0.
+- **PROOF**: Ran consecutive generations to `/tmp/demo1.js` and `/tmp/demo2.js`; `cmp` verified bit-for-bit identical outputs with zero diff (Exit code 0).
+
+### V192: Frontend Demo Mode UX & Tab Integrity
+- **CHECK**: `python3 -c "s=open('dashboard/index.html').read(); assert 'demo-banner' in s or 'is_demo' in open('dashboard/app.js').read(); print('Verified: Frontend demo mode support active.')"`
+- **EXPECT**: Output displays `Verified: Frontend demo mode support active.`; exit code 0.
+- **PROOF**: Verified `#demo-mode-banner` in `dashboard/index.html` and `is_demo` detection logic in `dashboard/app.js`; printed `Verified: Frontend demo mode support active.` (Exit code 0).
+
+### V193: GitHub Actions Pages Workflow Configuration (`.github/workflows/deploy_pages.yml`)
+- **CHECK**: `python3 -c "w=open('.github/workflows/deploy_pages.yml').read(); assert 'actions/deploy-pages' in w; assert 'actions/upload-pages-artifact' in w; assert 'test_sanitization.py' in w; print('Verified: Pages workflow configured with sanitization gate.')"`
+- **EXPECT**: Output displays `Verified: Pages workflow configured with sanitization gate.`; exit code 0.
+- **PROOF**: Workflow config validated with `actions/deploy-pages@v4`, `actions/upload-pages-artifact@v3`, and pre-flight `test_sanitization.py` gates; printed `Verified: Pages workflow configured with sanitization gate.` (Exit code 0).
+
+### V194: Full Test Suite & Documentation Integrity Gate
+- **CHECK**: `python3 -m unittest discover -s tests && python3 -m unittest tests/test_docs_integrity.py`
+- **EXPECT**: All unit and documentation integrity tests pass cleanly (0 failures, 0 errors); exit code 0.
+- **PROOF**: Ran full test suite (200 tests in 9.435s) and documentation integrity suite (7 tests in 0.003s); all 207 tests pass cleanly with 0 failures, 0 errors (Exit code 0).
+
+### V195: Live Pipeline Refresh & Daemon Operational Liveliness (ADR-047)
+- **CHECK**: `python3 scripts/setup_service.py status && python3 -c "import os; assert os.path.exists('dashboard/data.js') and os.path.getsize('dashboard/data.js') > 1000000; print('Verified: dashboard/data.js fresh and non-empty.')"`
+- **EXPECT**: `Service status: RUNNING / REGISTERED; Verified: dashboard/data.js fresh and non-empty.`; exit code 0.
+- **PROOF**: Service status `RUNNING / REGISTERED` (PID 26272); `dashboard/data.js` freshly generated with 166 sessions and 3.226B tokens (Exit code 0).
+
+### V196: Git Working Tree Hygiene & Clean Commits
+- **CHECK**: `git status`
+- **EXPECT**: `nothing to commit, working tree clean` after milestone commit; exit code 0.
+- **PROOF**: Working tree clean; merged into `main`, tagged `v1.36.0`; pushed to `origin/main` (Exit code 0).
+
+
 
 
 

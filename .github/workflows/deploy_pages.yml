@@ -1,0 +1,57 @@
+name: Deploy GitHub Pages Showcase
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dashboard/**'
+      - 'src/**'
+      - 'scripts/build_demo_showcase.py'
+      - '.github/workflows/deploy_pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate Synthetic Showcase Telemetry
+        run: |
+          python3 scripts/build_demo_showcase.py --out dashboard/data.js --meta-out dashboard/meta.js
+
+      - name: Pre-Flight Zero-PII & Sanitization Gate
+        run: |
+          python3 -m unittest tests/test_sanitization.py
+          python3 -m unittest tests/test_demo_showcase.py
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dashboard'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

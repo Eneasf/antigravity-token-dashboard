@@ -66,8 +66,48 @@ body {
   line-height: 1.5;
   padding: 24px;
   transition: background-color 0.2s, color 0.2s;
-}
 .container { max-width: 1400px; margin: 0 auto; }
+
+/* Demo Mode Showcase Banner */
+.demo-banner {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.demo-banner-content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+.demo-pill {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--accent-blue);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.demo-text {
+  color: var(--text-muted);
+  flex: 1;
+}
+.demo-github-link {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.demo-github-link:hover {
+  text-decoration: underline;
+}
 header {
   display: flex;
   justify-content: space-between;

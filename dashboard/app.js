@@ -359,6 +359,13 @@ function initDashboard() {
   const convos = globalDashboardData.conversations || [];
   const workspaces = globalDashboardData.workspaces || [];
 
+  // Toggle Demo Mode Showcase Banner
+  const isDemo = summary.is_demo || (window.location && window.location.hostname && window.location.hostname.includes("github.io"));
+  const demoBanner = document.getElementById("demo-mode-banner");
+  if (demoBanner) {
+    demoBanner.style.display = isDemo ? "block" : "none";
+  }
+
   activeFilteredConversations = convos;
   activeConvoForTurns = null;
 
@@ -1167,6 +1174,16 @@ function startBurstCountdown(initialSeconds) {
 let currentTelemetrySha1 = (window.__TELEMETRY_META__ && window.__TELEMETRY_META__.payload_sha1) || null;
 
 function checkAndReloadTelemetry() {
+  if (globalDashboardData && globalDashboardData.summary && globalDashboardData.summary.is_demo) {
+    return;
+  }
+  if (window.location && window.location.pathname && window.location.pathname.includes("demo")) {
+    return;
+  }
+  if (window.location && window.location.search && (window.location.search.includes("demo=1") || window.location.search.includes("demo=true"))) {
+    return;
+  }
+
   const metaScript = document.createElement("script");
   metaScript.src = `meta.js?t=${Date.now()}`;
   metaScript.onload = () => {

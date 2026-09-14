@@ -5,13 +5,14 @@ A deterministic, zero-dependency, offline-first telemetry engine, live watcher d
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Stdlib)-success.svg)](antigravity_telemetry/)
-[![Release: v2.1.0](https://img.shields.io/badge/Release-v2.1.0-blue.svg)](docs/milestones/M35_PRIVACY_HARDENING_AND_PUBLIC_RELEASE.md)
+[![Release: v2.2.0](https://img.shields.io/badge/Release-v2.2.0-blue.svg)](docs/milestones/M36_GITHUB_PAGES_LIVE_SHOWCASE.md)
 [![CI Test Suite](https://github.com/Eneasf/antigravity-token-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/Eneasf/antigravity-token-dashboard/actions)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success.svg)](https://eneasf.github.io/antigravity-token-dashboard/)
 [![Calibrated Models: 19](https://img.shields.io/badge/Models-19%20Canonical-purple.svg)](antigravity_telemetry/models.json)
 [![Telemetry Wire Spec](https://img.shields.io/badge/Docs-Telemetry%20Wire%20Spec-blueviolet.svg)](docs/TELEMETRY_SPEC.md)
 [![Architecture Whitepaper](https://img.shields.io/badge/Architecture-Whitepaper-orange.svg)](docs/FINDINGS.md)
 
-**Documentation Hub**: [📘 Telemetry Specification](docs/TELEMETRY_SPEC.md) &nbsp;|&nbsp; [🔬 Architecture Whitepaper](docs/FINDINGS.md) &nbsp;|&nbsp; [🏗️ System Design](docs/SYSTEM_DESIGN.md) &nbsp;|&nbsp; [📦 Python Package](antigravity_telemetry/README.md) &nbsp;|&nbsp; [📋 ADR Log](docs/HANDOVER.md)
+**Documentation Hub**: [🌐 **Live Interactive Demo**](https://eneasf.github.io/antigravity-token-dashboard/) &nbsp;|&nbsp; [📘 Telemetry Specification](docs/TELEMETRY_SPEC.md) &nbsp;|&nbsp; [🔬 Architecture Whitepaper](docs/FINDINGS.md) &nbsp;|&nbsp; [🏗️ System Design](docs/SYSTEM_DESIGN.md) &nbsp;|&nbsp; [📦 Python Package](antigravity_telemetry/README.md) &nbsp;|&nbsp; [📋 ADR Log](docs/HANDOVER.md)
 
 > [!NOTE]
 > **Independent Personal Project & Employer Disclaimer**:
@@ -26,12 +27,12 @@ A deterministic, zero-dependency, offline-first telemetry engine, live watcher d
 > - **What It Does NOT Do**: This tool is strictly an observational analysis and benchmark suite. It **does NOT control, throttle, proxy, or alter API traffic**, and does not modify any Google billing accounts.
 
 > [!TIP]
-> **Architecture, AI Pair Programming & Governance (ADR-049 / Milestone 35)**:
+> **Architecture, AI Pair Programming & Governance (ADR-050 / Milestone 36)**:
 > This project was developed through human architectural direction (problem scoping, wire protocol extraction, safety invariants, and acceptance gates) paired with AI coding agents for implementation under strict engineering governance:
-> - **49 Architecture Decision Records (ADRs)** formally documenting data contracts and algorithms ([`docs/HANDOVER.md`](docs/HANDOVER.md)).
+> - **50 Architecture Decision Records (ADRs)** formally documenting data contracts and algorithms ([`docs/HANDOVER.md`](docs/HANDOVER.md)).
 > - **Verifiable Acceptance Gates (`VDONE.md`)** requiring executable verification commands and proofs before merging.
 > - **Zero-Dependency & Offline Safety**: Pure-Python standard library with read-only SQLite URI access (`mode=ro`).
-> - **Curated Snapshot Releases**: Development was conducted privately across 35 iterative milestones (`docs/milestones/`). The public repository receives curated release snapshots.
+> - **Curated Snapshot Releases**: Development was conducted privately across 36 iterative milestones (`docs/milestones/`). The public repository receives curated release snapshots.
 
 ---
 
@@ -356,7 +357,7 @@ python3 -m unittest discover -s tests
 │   ├── TELEMETRY_SPEC.md   # Field schemas, message wire types, and turn taxonomy
 │   ├── FINDINGS.md         # Authoritative systems architecture whitepaper on runtime telemetry, quotas & billing
 │   ├── HANDOVER.md         # Master decision index (ADR log), milestones, and open work
-│   └── milestones/         # Historical milestone slices (M01 to M35)
+│   └── milestones/         # Historical milestone slices (M01 to M36)
 ├── src/
 │   ├── proto_parser.py     # Pure Python protobuf wire-format decoder
 │   ├── telemetry_reader.py # Read-only SQLite extractor with retry lock resilience
@@ -382,10 +383,12 @@ python3 -m unittest discover -s tests
 │   ├── configure_plan.py   # CLI tool to inspect and calibrate plan configuration (ADR-038)
 │   ├── capture_showcase_screenshots.py # Headless showcase screenshot generator in Light Mode
 │   ├── setup_github_guardrails.py # Automated repository branch protection & templates
+│   ├── build_demo_showcase.py # Generates deterministic, zero-PII synthetic demo telemetry for GitHub Pages
 │   ├── build_ci_fixtures.py # Generates reproducible, anonymized offline Antigravity fixtures
 │   └── publish_to_public.py # Safeguarded release publisher for public showcase repository
 ├── dashboard/
 │   ├── index.html          # Semantic responsive analytics UI (Light/Dark themes)
+│   ├── demo.html           # Local convenience launcher for interactive demo showcase
 │   ├── styles.css          # Core CSS tokens (Light default), theme definitions, layout grids
 │   ├── app.js              # Client routing, SVG DAG renderer, and simulator engine
 │   └── meta.js             # Fast telemetry hash-gating script (<250 bytes)
@@ -414,5 +417,6 @@ python3 -m unittest discover -s tests
     ├── test_ci_fixtures.py      # Tests for offline fixture discovery, token census, and byte-determinism
     ├── test_git_timeline.py     # Tests for Git reflog checkout interval extraction & branch resolution
     ├── test_sanitization.py     # Tests for PII, enterprise terms, and telemetry sanitization (ADR-049)
+    ├── test_demo_showcase.py    # Tests for synthetic showcase generator, schema compliance, and zero PII
     └── test_docs_integrity.py   # Automated documentation integrity and drift prevention
 ```
