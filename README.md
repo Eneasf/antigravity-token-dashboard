@@ -12,7 +12,7 @@ A deterministic, zero-dependency, offline-first telemetry engine, live watcher d
 [![Telemetry Wire Spec](https://img.shields.io/badge/Docs-Telemetry%20Wire%20Spec-blueviolet.svg)](docs/TELEMETRY_SPEC.md)
 [![Architecture Whitepaper](https://img.shields.io/badge/Architecture-Whitepaper-orange.svg)](docs/FINDINGS.md)
 
-**Documentation Hub**: [🌐 **Live Interactive Demo**](https://eneasf.github.io/antigravity-token-dashboard/) &nbsp;|&nbsp; [📘 Telemetry Specification](docs/TELEMETRY_SPEC.md) &nbsp;|&nbsp; [🔬 Architecture Whitepaper](docs/FINDINGS.md) &nbsp;|&nbsp; [🏗️ System Design](docs/SYSTEM_DESIGN.md) &nbsp;|&nbsp; [📦 Python Package](antigravity_telemetry/README.md) &nbsp;|&nbsp; [📋 ADR Log](docs/HANDOVER.md)
+**Documentation Hub**: [🌐 **Live Interactive Demo**](https://eneasf.github.io/antigravity-token-dashboard/) &nbsp;|&nbsp; [📘 Telemetry Specification](docs/TELEMETRY_SPEC.md) &nbsp;|&nbsp; [🔬 Architecture Whitepaper](docs/FINDINGS.md) &nbsp;|&nbsp; [🏗️ System Design](docs/SYSTEM_DESIGN.md) &nbsp;|&nbsp; [🛡️ Compliance Report](docs/COMPLIANCE_REPORT.md) &nbsp;|&nbsp; [📦 Python Package](antigravity_telemetry/README.md) &nbsp;|&nbsp; [📋 ADR Log](docs/HANDOVER.md)
 
 > [!NOTE]
 > **Independent Personal Project & Employer Disclaimer**:
@@ -204,6 +204,7 @@ Detailed specifications, runtime analysis papers, and architectural blueprints:
 | [📘 **Telemetry Specification** (`docs/TELEMETRY_SPEC.md`)](docs/TELEMETRY_SPEC.md) | **Protobuf Wire Specification & Field Mappings**: Wire protobuf field IDs (`9.2` uncached prompt, `9.5` cached prompt, `9.9` thoughts/reasoning, `9.10` candidate tokens), wire types, SQLite database schema (`steps`), and conversation turn taxonomy. | Telemetry parser developers, agent authors, protocol researchers |
 | [🔬 **Architecture & Telemetry Whitepaper** (`docs/FINDINGS.md`)](docs/FINDINGS.md) | **In-Depth Runtime Analysis**: Deep technical report on Google Antigravity's internal architecture, Connect-RPC desktop quota protocol, Google One AI credit billing mechanics, 94% context cache efficiency, KV cache eviction on model flips, and 3-tier subagent routing. | System architects, LLM engineers, observability researchers |
 | [🏗️ **System Design & Architecture** (`docs/SYSTEM_DESIGN.md`)](docs/SYSTEM_DESIGN.md) | **Pipeline & Storage Blueprint**: Multi-tier architecture covering read-only SQLite WAL tailing (`?mode=ro`), lossless event sourcing, permanent vault sync, debounced watcher daemons, and offline HTML data hook injection contracts. | Core contributors, pipeline engineers, systems programmers |
+| [🛡️ **Compliance & Fair Use Report** (`docs/COMPLIANCE_REPORT.md`)](docs/COMPLIANCE_REPORT.md) | **Audit & Legal Posture**: Legal and technical compliance audit verifying adherence to Google Terms of Service, Generative AI Prohibited Use Policy, statutory interoperability protections, and zero PII/code exfiltration. | Legal reviewers, compliance officers, open-source auditors |
 | [📦 **Standalone Package Guide** (`antigravity_telemetry/README.md`)](antigravity_telemetry/README.md) | **Zero-Dependency Python Library**: Complete guide to using the extracted `antigravity_telemetry` package via clean public API (`read_all_turns()`, `discover_all_conversations()`) or fast CLI (`python -m antigravity_telemetry dump --json`). | Python developers, automation scripts, external agent workflows |
 | [📋 **Master Handover & ADR Log** (`docs/HANDOVER.md`)](docs/HANDOVER.md) | **Architecture Decision Records**: Complete index of 49 settled ADRs documenting data contracts, rate cards, calendar reset algorithms, and quota reconciliation formulas. | Maintainers, code auditors, historical reviewers |
 
@@ -356,6 +357,7 @@ python3 -m unittest discover -s tests
 │   ├── SYSTEM_DESIGN.md    # Architecture, SQLite WAL ingestion, and protobuf parsing
 │   ├── TELEMETRY_SPEC.md   # Field schemas, message wire types, and turn taxonomy
 │   ├── FINDINGS.md         # Authoritative systems architecture whitepaper on runtime telemetry, quotas & billing
+│   ├── COMPLIANCE_REPORT.md # Comprehensive Google ToS, Generative AI policy & Fair Use audit
 │   ├── HANDOVER.md         # Master decision index (ADR log), milestones, and open work
 │   └── milestones/         # Historical milestone slices (M01 to M36)
 ├── src/
