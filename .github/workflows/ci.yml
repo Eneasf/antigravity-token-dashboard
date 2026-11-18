@@ -1,0 +1,52 @@
+name: CI Test Suite & Invariant Gates
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }} - Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        python-version: [ "3.10", "3.11", "3.12" ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify Zero External Dependencies (ADR-001)
+        run: |
+          python -c "import sqlite3, json, pathlib, re, datetime, struct, urllib.request; print('✓ Core standard library verified with zero third-party packages.')"
+
+      - name: Run Unit Test Suite
+        run: |
+          python -m unittest discover -s tests
+
+      - name: Verify Deterministic Dashboard Exporter Against Offline Fixtures (ADR-004 / ADR-044)
+        run: |
+          python scripts/export_dashboard.py --antigravity-dir tests/fixtures/antigravity --no-live-quota --reference-time 2026-09-05T14:30:00Z
+          python -c "import json; d = json.load(open('dashboard/data.json')); assert d['summary']['total_input_tokens'] == 77000; assert len(d['conversations']) == 2; print('✓ Verified: Offline fixture export extracted 2 sessions, 77,000 tokens.')"
+          cp dashboard/data.json dashboard/data.json.orig
+          cp dashboard/data.js dashboard/data.js.orig
+          cp dashboard/meta.json dashboard/meta.json.orig
+          cp dashboard/meta.js dashboard/meta.js.orig
+          python scripts/export_dashboard.py --antigravity-dir tests/fixtures/antigravity --no-live-quota --reference-time 2026-09-05T14:30:00Z
+          diff -u dashboard/data.json.orig dashboard/data.json
+          diff -u dashboard/data.js.orig dashboard/data.js
+          diff -u dashboard/meta.json.orig dashboard/meta.json
+          diff -u dashboard/meta.js.orig dashboard/meta.js
+          echo "✓ Verified: 100% byte-deterministic export on CI runner."

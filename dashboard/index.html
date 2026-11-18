@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Token Consumption & Quota Dashboard</title>
+  <meta name="description" content="Offline telemetry for LLM token use, context caching, reasoning tokens and quota in Google's Antigravity agentic IDE. Live demo with synthetic data.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Antigravity Token Dashboard — live demo (synthetic data)">
+  <meta property="og:description" content="Offline telemetry for LLM token use, context caching, reasoning tokens and quota in an agentic IDE. Built with AI coding agents; open source.">
+  <meta property="og:url" content="https://eneasf.github.io/antigravity-token-dashboard/">
+  <meta property="og:image" content="https://eneasf.github.io/antigravity-token-dashboard/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem("antigravity_dashboard_theme");
+        var theme = (savedTheme === "dark") ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.classList.add(theme);
+        var savedShell = localStorage.getItem("antigravity_shell_mode");
+        window.__INITIAL_SHELL__ = (savedShell === "top") ? "top" : "side";
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+        document.documentElement.classList.add("light");
+        window.__INITIAL_SHELL__ = "side";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+
+  <script>
+    (function() {
+      var isDemo = false;
+      try {
+        var params = new URLSearchParams(window.location.search);
+        isDemo = (params.get("demo") === "1" || params.get("demo") === "true");
+      } catch (e) {}
+      if (isDemo) {
+        document.write('<script src="meta.demo.js"><\/script>');
+        document.write('<script src="data.demo.js"><\/script>');
+      } else {
+        document.write('<script src="meta.js"><\/script>');
+        document.write('<script src="data.js"><\/script>');
+      }
+    })();
+  </script>
+  <script src="meta.js"></script>
+  <script src="data.js"></script>
+</head>
+<body>
+  <div id="app-layout-container" class="app-layout shell-mode-side">
+    <!-- 1. PATTERN A: COLLAPSIBLE SIDEBAR DOCK -->
+    <aside id="sidebar-dock" class="sidebar-dock" aria-label="Main Navigation">
+      <div class="dock-brand-anchor">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="dock-brand-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Zm-16,0a80,80,0,1,0-80,80A80.09,80.09,0,0,0,208,128Zm-80-48a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"/></svg>
+          </div>
+          <div class="dock-brand-text">
+            <span class="dock-brand-title">Antigravity</span>
+            <span class="dock-brand-sub">Token Telemetry</span>
+          </div>
+        </div>
+        <button class="dock-collapse-btn tactile-press" data-action="toggle-sidebar" title="Toggle Sidebar">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
+        </button>
+      </div>
+
+      <nav class="dock-nav-list" role="tablist" aria-label="Main Navigation">
+        <button id="dock-tab-now" class="dock-nav-item active" data-action="switch-tab" data-tab="tab-now" role="tab" aria-selected="true" aria-controls="view-now" aria-label="Real-Time Quotas" data-tooltip="Real-Time Quotas & Model Matrix">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M240,128a8,8,0,0,1-8,8H187.52l-33.15,66.3a8,8,0,0,1-14.34,0L95.52,64.3,73.55,108.24A8,8,0,0,1,66.4,112H24a8,8,0,0,1,0-16H61.6l28.88-57.76a8,8,0,0,1,14.34,0L149.33,178l17.12-34.24A8,8,0,0,1,173.6,136H232A8,8,0,0,1,240,128Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Now</span>
+          <span class="dock-nav-badge" id="dock-badge-now">Live</span>
+        </button>
+        <button id="dock-tab-sessions" class="dock-nav-item" data-action="switch-tab" data-tab="tab-sessions" role="tab" aria-selected="false" aria-controls="view-sessions" aria-label="Sessions Explorer" data-tooltip="Sessions & Turn Inspector">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm44-12a12,12,0,1,0,12,12A12,12,0,0,0,184,116ZM72,116a12,12,0,1,0,12,12A12,12,0,0,0,72,116Zm160,12A104,104,0,0,1,79.2,221.78L41.34,233.4a16,16,0,0,1-20.08-20.08l11.62-37.86A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,168.32a8,8,0,0,1,.84,6.47l-9.76,31.79,31.79-9.76a8,8,0,0,1,6.47.84A88,88,0,0,0,216,128Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Sessions</span>
+          <span class="dock-nav-badge" id="dock-badge-sessions">0</span>
+        </button>
+        <button id="dock-tab-projects" class="dock-nav-item" data-action="switch-tab" data-tab="tab-projects" role="tab" aria-selected="false" aria-controls="view-projects" aria-label="Projects & Repositories" data-tooltip="Projects & Git Branches">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,64a32,32,0,1,0-44.59,29.47A64.12,64.12,0,0,0,104,147.25V93.47A32,32,0,1,0,88,64a32.14,32.14,0,0,0,1.27,9A32,32,0,0,0,88,80v96a32,32,0,1,0,24.73-31.18A48.14,48.14,0,0,1,152,99.64V128a32,32,0,1,0,16,0V88a48.09,48.09,0,0,1,20.73-39.18A32,32,0,0,0,208,64ZM80,64a16,16,0,1,1,16,16A16,16,0,0,1,80,64Zm24,128a16,16,0,1,1-16-16A16,16,0,0,1,104,192Zm72-48a16,16,0,1,1-16-16A16,16,0,0,1,176,144Zm16-80a16,16,0,1,1-16-16A16,16,0,0,1,192,64Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Projects</span>
+        </button>
+        <button id="dock-tab-swarms" class="dock-nav-item" data-action="switch-tab" data-tab="tab-swarms" role="tab" aria-selected="false" aria-controls="view-swarms" aria-label="Subagent Swarms" data-tooltip="Autonomous Swarms & Lineage DAG">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,168a24,24,0,0,0-17.76,8.24l-38.64-27.6A40,40,0,0,0,176,128a39.69,39.69,0,0,0-6.19-21.2l36.43-31.87A24,24,0,1,0,195.44,61.4L159,93.28A40,40,0,0,0,136,88.9V48h8a8,8,0,0,0,0-16H112a8,8,0,0,0,0,16h8V88.9a40,40,0,0,0-23,4.38L60.56,61.4A24,24,0,1,0,50.19,74.93L86.62,106.8A39.69,39.69,0,0,0,80.43,128a40,40,0,0,0,8.41,20.64l-38.64,27.6A24,24,0,1,0,60,192a23.86,23.86,0,0,0-1.76-9l37.2-26.57a40,40,0,0,0,65.12,0l37.2,26.57A23.86,23.86,0,0,0,196,192a24,24,0,1,0,28-24ZM48,80a8,8,0,1,1,8-8A8,8,0,0,1,48,80ZM40,200a8,8,0,1,1,8-8A8,8,0,0,1,40,200ZM208,64a8,8,0,1,1-8,8A8,8,0,0,1,208,64Zm8,136a8,8,0,1,1,8-8A8,8,0,0,1,216,200ZM128,152a24,24,0,1,1,24-24A24,24,0,0,1,128,152Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Swarms &amp; Tools</span>
+        </button>
+        <button id="dock-tab-billing" class="dock-nav-item" data-action="switch-tab" data-tab="tab-billing" role="tab" aria-selected="false" aria-controls="view-billing" aria-label="Billing & Trends" data-tooltip="Billing & Historical Cycles">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H216V88H40ZM216,200H40V136H216v64Zm-32-36a8,8,0,0,1-8,8H128a8,8,0,0,1,0-16h48A8,8,0,0,1,184,164Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Billing</span>
+        </button>
+        <button id="dock-tab-plan" class="dock-nav-item" data-action="switch-tab" data-tab="tab-plan" role="tab" aria-selected="false" aria-controls="view-plan" aria-label="Capacity & Plan Simulator" data-tooltip="What-If Simulator & Plan Profiles">
+          <span class="dock-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M40,88H74.34a36,36,0,0,0,67.32,0H216a8,8,0,0,0,0-16H141.66a36,36,0,0,0-67.32,0H40a8,8,0,0,0,0,16Zm68-20A20,20,0,1,1,88,88,20,20,0,0,1,108,68ZM216,168H181.66a36,36,0,0,0-67.32,0H40a8,8,0,0,0,0,16h74.34a36,36,0,0,0,67.32,0H216a8,8,0,0,0,0-16Zm-68,20a20,20,0,1,1,20-20A20,20,0,0,1,148,188Z"/></svg>
+          </span>
+          <span class="dock-nav-label">Plan</span>
+        </button>
+      </nav>
+
+      <div class="dock-footer">
+        <div class="toggle-group currency-toggle" id="dock-currency-toggle" style="width: 100%; justify-content: space-around;">
+          <button id="dock-btn-curr-gbp" class="active" data-action="set-currency" data-currency="GBP">£ GBP</button>
+          <button id="dock-btn-curr-usd" data-action="set-currency" data-currency="USD">$ USD</button>
+        </div>
+        <div class="toggle-group" id="dock-theme-toggle" style="width: 100%; justify-content: space-around;">
+          <button id="dock-btn-theme-dark" class="active" data-action="set-theme" data-theme="dark">
+            <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M233.54,152.52a8,8,0,0,0-7.93-4.42,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-4.42-7.93A8.13,8.13,0,0,0,103,30.54,104.11,104.11,0,1,0,233.58,160.88,8.15,8.15,0,0,0,233.54,152.52ZM128,216a88.13,88.13,0,0,1-86.86-102.58A104.09,104.09,0,0,0,146.58,214.86,87.62,87.62,0,0,1,128,216Z"/></svg>
+            Dark
+          </button>
+          <button id="dock-btn-theme-light" data-action="set-theme" data-theme="light">
+            <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16a8,8,0,0,0-11.32,11.32Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,184a8,8,0,0,0,5.66,2.34l16,16a8,8,0,0,0,11.32-11.32l-16-16A8,8,0,0,0,192,184ZM40,120H16a8,8,0,0,0,0,16H40a8,8,0,0,0,0-16Zm176,0H192a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16ZM136,216a8,8,0,0,0-16,0v24a8,8,0,0,0,16,0ZM186.34,69.66l16-16a8,8,0,0,0-11.32-11.32l-16,16a8,8,0,0,0,11.32,11.32Z"/></svg>
+            Light
+          </button>
+        </div>
+        <button id="btn-sidebar-collapse-footer" class="tactile-press" data-action="toggle-sidebar" title="Toggle Sidebar">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
+          <span id="dock-collapse-label">Collapse Sidebar</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT VIEWPORT -->
+    <div id="app-main-viewport" class="main-viewport">
+      <div class="container">
+        <!-- Demo Mode Showcase Banner (visible when data.summary.is_demo is true) -->
+        <div id="demo-mode-banner" class="demo-banner" style="display: none;">
+          <div class="demo-banner-content">
+            <span class="demo-pill">Interactive Showcase Demo</span>
+            <span class="demo-text">Viewing pre-computed synthetic telemetry across 4 software projects, 25 turn trajectories, and 12-week cycles.</span>
+            <a href="https://github.com/Eneasf/antigravity-token-dashboard" target="_blank" rel="noopener noreferrer" class="demo-github-link">GitHub Repository ↗</a>
+          </div>
+        </div>
+
+        <header>
+          <div class="title-group">
+            <h1>Token Quota Dashboard</h1>
+          </div>
+          <div class="badges">
+            <span id="sub-status-badge" class="badge green">✓ Safe</span>
+            <button id="btn-open-plan-manager" class="badge camel tactile-press" style="cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;" title="Open Plan Profile &amp; Promotion Manager" data-action="open-plan-manager">
+              <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.6,107.6,0,0,0-10.88-26.25,8,8,0,0,0-6-4.14l-23.54-3.52q-1.55-1.52-3.18-2.95l-3.52-23.54a8,8,0,0,0-4.14-6,107.6,107.6,0,0,0-26.25-10.88,8,8,0,0,0-7.06,1.48L134.16,24q-2.16-.06-4.32,0L111.2,38.92a8,8,0,0,0-7.06,1.48,107.6,107.6,0,0,0-26.25,10.88,8,8,0,0,0-4.14,6L70.23,80.82q-1.63,1.43-3.18,2.95L43.51,87.29a8,8,0,0,0-6,4.14,107.6,107.6,0,0,0-10.88,26.25,8,8,0,0,0,1.48,7.06L43,143.38q-.06,2.16,0,4.32L28.08,166.34a8,8,0,0,0-1.48,7.06,107.6,107.6,0,0,0,10.88,26.25,8,8,0,0,0,6,4.14l23.54,3.52q1.55,1.52,3.18,2.95l3.52,23.54a8,8,0,0,0,4.14,6,107.6,107.6,0,0,0,26.25,10.88,8,8,0,0,0,7.06-1.48L121.84,232q2.16.06,4.32,0l18.64-14.92a8,8,0,0,0,7.06-1.48,107.6,107.6,0,0,0,26.25-10.88,8,8,0,0,0,4.14-6l3.52-23.54q1.63-1.43,3.18-2.95l23.54-3.52a8,8,0,0,0,6-4.14,107.6,107.6,0,0,0,10.88-26.25,8,8,0,0,0-1.48-7.06ZM204.65,160.7l-18.42,2.75a8,8,0,0,0-6.19,4.52,91.86,91.86,0,0,1-7.79,13.49,8,8,0,0,0-.73,7.62l6.83,18.42a91.68,91.68,0,0,1-13.43,7.75l-14.9-14.9a8,8,0,0,0-7.62-.73,91.86,91.86,0,0,1-13.49,7.79,8,8,0,0,0-4.52,6.19L121.65,222a92,92,0,0,1-15.3,0l-2.75-18.42a8,8,0,0,0-4.52-6.19,91.86,91.86,0,0,1-13.49-7.79,8,8,0,0,0-7.62.73l-14.9,14.9a91.68,91.68,0,0,1-13.43-7.75l6.83-18.42a8,8,0,0,0-.73-7.62,91.86,91.86,0,0,1-7.79-13.49,8,8,0,0,0-6.19-4.52L31.35,160.7a92,92,0,0,1,0-15.3l18.42-2.75a8,8,0,0,0,6.19-4.52,91.86,91.86,0,0,1,7.79-13.49,8,8,0,0,0,.73-7.62L57.65,98.6a91.68,91.68,0,0,1,13.43-7.75l14.9,14.9a8,8,0,0,0,7.62.73,91.86,91.86,0,0,1,13.49-7.79,8,8,0,0,0,4.52-6.19L114.35,34a92,92,0,0,1,15.3,0l2.75,18.42a8,8,0,0,0,4.52,6.19,91.86,91.86,0,0,1,13.49,7.79,8,8,0,0,0,7.62-.73l14.9-14.9a91.68,91.68,0,0,1,13.43,7.75l-6.83,18.42a8,8,0,0,0,.73,7.62,91.86,91.86,0,0,1,7.79,13.49,8,8,0,0,0,6.19,4.52L204.65,95.3a92,92,0,0,1,0,15.3l-18.42,2.75a8,8,0,0,0-6.19,4.52,91.86,91.86,0,0,1-7.79,13.49,8,8,0,0,0-.73,7.62l6.83,18.42a91.68,91.68,0,0,1-13.43,7.75l-14.9-14.9a8,8,0,0,0-7.62-.73,91.86,91.86,0,0,1-13.49,7.79,8,8,0,0,0-4.52,6.19L141.65,222a92,92,0,0,1-15.3,0Z"/></svg>
+              <span id="header-tier-badge">Pro</span>
+            </button>
+            <span id="data-freshness-badge" class="badge">Local · read-only</span>
+            <span id="billing-cycle-badge" class="badge header-desktop-only">Billing: Active</span>
+            <span id="session-count-badge" class="badge header-desktop-only">0 Sessions</span>
+            <span id="degraded-badge-header" class="badge" style="display: none; cursor: help; margin-left: 4px;"></span>
+
+            <!-- Settings Toggles (Desktop only >= 960px) -->
+            <div class="toggle-group header-desktop-toggles currency-toggle" id="currency-toggle-group">
+              <button id="btn-curr-gbp" class="active" data-action="set-currency" data-currency="GBP">GBP (£)</button>
+              <button id="btn-curr-usd" data-action="set-currency" data-currency="USD">USD ($)</button>
+            </div>
+            <div class="toggle-group header-desktop-toggles" id="theme-toggle-group">
+              <button id="btn-theme-light" data-action="set-theme" data-theme="light" title="Light Theme">
+                <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16a8,8,0,0,0-11.32,11.32Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,184a8,8,0,0,0,5.66,2.34l16,16a8,8,0,0,0,11.32-11.32l-16-16A8,8,0,0,0,192,184ZM40,120H16a8,8,0,0,0,0,16H40a8,8,0,0,0,0-16Zm176,0H192a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16ZM136,216a8,8,0,0,0-16,0v24a8,8,0,0,0,16,0ZM186.34,69.66l16-16a8,8,0,0,0-11.32-11.32l-16,16a8,8,0,0,0,11.32,11.32Z"/></svg>
+              </button>
+              <button id="btn-theme-dark" data-action="set-theme" data-theme="dark" title="Dark Theme">
+                <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M233.54,152.52a8,8,0,0,0-7.93-4.42,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-4.42-7.93A8.13,8.13,0,0,0,103,30.54,104.11,104.11,0,1,0,233.58,160.88,8.15,8.15,0,0,0,233.54,152.52ZM128,216a88.13,88.13,0,0,1-86.86-102.58A104.09,104.09,0,0,0,146.58,214.86,87.62,87.62,0,0,1,128,216Z"/></svg>
+              </button>
+            </div>
+            <div class="toggle-group header-desktop-toggles" id="header-shell-toggle" title="Layout Mode: Sidebar vs Top Bar">
+              <button id="btn-shell-side" class="active" data-action="set-shell-mode" data-shell="side" title="Sidebar Mode">
+                <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H88V200H40ZM216,200H104V56H216V200Z"/></svg>
+              </button>
+              <button id="btn-shell-top" data-action="set-shell-mode" data-shell="top" title="Top Bar Mode">
+                <svg width="13" height="13" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H216V88H40ZM216,200H40V104H216V200Z"/></svg>
+              </button>
+            </div>
+
+            <!-- Overflow ⋯ Menu Container -->
+            <div class="header-overflow-wrapper">
+              <button id="btn-header-overflow" class="badge tactile-press" data-action="toggle-header-overflow" aria-label="More options" title="More options" style="cursor: pointer; padding: 4px 8px; font-weight: 700;">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M112,128a16,16,0,1,1,16,16A16,16,0,0,1,112,128Zm-64,0a16,16,0,1,1,16,16A16,16,0,0,1,48,128Zm128,0a16,16,0,1,1,16,16A16,16,0,0,1,176,128Z"/></svg>
+              </button>
+              <div id="header-overflow-menu" class="header-overflow-dropdown" style="display: none;">
+                <button id="btn-copy-standup" class="overflow-item tactile-press" data-action="copy-standup" title="Copy Markdown Summary for Standup">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>
+                  <span id="btn-copy-standup-text">Copy Summary</span>
+                </button>
+                <div class="overflow-section mobile-only-overflow">
+                  <div class="overflow-label">Currency</div>
+                  <div class="toggle-group currency-toggle" style="width: 100%;">
+                    <button class="active" data-action="set-currency" data-currency="GBP" style="flex: 1;">GBP (£)</button>
+                    <button data-action="set-currency" data-currency="USD" style="flex: 1;">USD ($)</button>
+                  </div>
+                </div>
+                <div class="overflow-section mobile-only-overflow">
+                  <div class="overflow-label">Theme</div>
+                  <div class="toggle-group" style="width: 100%;">
+                    <button data-action="set-theme" data-theme="light" style="flex: 1;">Light</button>
+                    <button data-action="set-theme" data-theme="dark" style="flex: 1;">Dark</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+
+        <!-- 2. TOP-LEVEL TAB NAVIGATION (Workspace Command Strip) -->
+        <div class="tab-nav workspace-command-strip" role="region" tabindex="0" aria-label="Workspace Navigation Command Strip (scrollable)">
+          <div class="tab-buttons-group" role="tablist" aria-label="Views">
+            <button id="tab-now" class="tab-btn active" data-action="switch-tab" data-tab="tab-now" role="tab" aria-selected="true" aria-controls="view-now">
+              Now
+            </button>
+            <button id="tab-sessions" class="tab-btn" data-action="switch-tab" data-tab="tab-sessions" role="tab" aria-selected="false" aria-controls="view-sessions">
+              Sessions <span id="degraded-badge-top-tab" class="badge" style="display: none; margin-left: 6px; padding: 0 4px; font-size: 0.7rem; border: none;"></span>
+            </button>
+            <button id="tab-projects" class="tab-btn" data-action="switch-tab" data-tab="tab-projects" role="tab" aria-selected="false" aria-controls="view-projects">
+              Projects
+            </button>
+            <button id="tab-swarms" class="tab-btn" data-action="switch-tab" data-tab="tab-swarms" role="tab" aria-selected="false" aria-controls="view-swarms">
+              Swarms &amp; Tools
+            </button>
+            <button id="tab-billing" class="tab-btn" data-action="switch-tab" data-tab="tab-billing" role="tab" aria-selected="false" aria-controls="view-billing">
+              Billing
+            </button>
+            <button id="tab-plan" class="tab-btn" data-action="switch-tab" data-tab="tab-plan" role="tab" aria-selected="false" aria-controls="view-plan">
+              Plan
+            </button>
+          </div>
+
+          <!-- Live Token Ticker HUD (State-Adaptive Cockpit: M40) -->
+          <div id="token-ticker-hud" class="token-ticker-hud" title="Live 3-Second Telemetry Cockpit">
+            <div class="ticker-beacon-wrapper" title="Telemetry Stream Status">
+              <span class="ticker-beacon-dot idle" id="ticker-beacon-dot"></span>
+            </div>
+            <div class="ticker-metric" id="ticker-rate-container" style="display: none;">
+              <span class="ticker-metric-icon">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M215.79,118.17a8,8,0,0,0-7.79-6.17H152V32a8,8,0,0,0-13.66-5.66l-96,96a8,8,0,0,0,5.66,13.66H104v80a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,215.79,118.17ZM120,196.69V144a8,8,0,0,0-8-8H67.31l64-64v52.69a8,8,0,0,0,8,8h44.69Z"/></svg>
+              </span>
+              <span class="ticker-metric-val" id="ticker-rate">0 tok/min</span>
+            </div>
+            <div class="ticker-delta-pill" id="ticker-delta-pill">
+              <span id="ticker-delta-val">▲ +0</span>
+            </div>
+            <div class="ticker-divider"></div>
+            <div class="ticker-engine-pill" id="ticker-engine">
+              <span id="ticker-engine-model">Gemini 3.8 Flash</span>
+              <span class="ticker-engine-sep">·</span>
+              <span id="ticker-engine-cache">95.7% Cache</span>
+            </div>
+            <div class="ticker-divider"></div>
+            <div class="ticker-5h-pill" id="ticker-5h" title="5-Hour Limit: Tokens Used & Reset Horizon">
+              <span class="ticker-5h-prefix">5h:</span>
+              <span id="ticker-5h-tokens" class="ticker-5h-val">0 tok</span>
+              <span class="ticker-engine-sep">·</span>
+              <span id="ticker-5h-headroom" class="ticker-5h-rem">100% free</span>
+            </div>
+          </div>
+        </div>
+
+
+    <!-- VIEW 1: Now -->
+    <div id="view-now" class="tab-view active" role="tabpanel" aria-labelledby="tab-now">
+      <div id="now-degraded-warning-container" style="display: none; margin-bottom: 20px;"></div>
+
+      <!-- Milestone 88: Executive Bento Card (Mac Menu Bar Parity & 4-Track Consolidated Runway) -->
+      <section class="section-card executive-hero-card" id="executive-hero-card" aria-label="Quota and Runway Overview">
+        <div class="exec-card-header">
+          <div class="exec-header-left">
+            <div class="exec-title-row">
+              <svg class="exec-sparkle-icon exec-icon" width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M213.66,122.34l-42.34-14.11-14.11-42.34a8,8,0,0,0-15.18,0L127.92,108.23,85.58,122.34a8,8,0,0,0,0,15.18l42.34,14.11,14.11,42.34a8,8,0,0,0,15.18,0l14.11-42.34,42.34-14.11A8,8,0,0,0,213.66,122.34Zm-63.4,7.88a8,8,0,0,0-5.14,5.14L136,162.77l-9.12-27.41a8,8,0,0,0-5.14-5.14L94.33,121.1l27.41-9.12a8,8,0,0,0,5.14-5.14L136,79.43l9.12,27.41a8,8,0,0,0,5.14,5.14l27.41,9.12ZM80,64a8,8,0,0,1-8,8H56V88a8,8,0,0,1-16,0V72H24a8,8,0,0,1,0-16H40V40a8,8,0,0,1,16,0V56H72A8,8,0,0,1,80,64Zm24,128a8,8,0,0,1-8,8H80v16a8,8,0,0,1-16,0V200H48a8,8,0,0,1,0-16H64V168a8,8,0,0,1,16,0v16h16A8,8,0,0,1,104,192Z"/>
+              </svg>
+              <h2 class="exec-title">Quota right now</h2>
+              <span class="exec-plan-pill" id="exec-plan-name">Plan Tier</span>
+            </div>
+            <p class="exec-subtitle">Live track headroom, weekly runway pace, and AI credit reserve</p>
+          </div>
+          <div class="exec-header-right" style="display: flex; align-items: center; gap: 8px;">
+            <span id="desktop-sync-badge" class="badge muted" style="display: none;">Cost-Weighted Offline</span>
+            <button id="btn-auto-refresh" class="badge tactile-press" style="cursor: pointer; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--accent-green); font-size: 0.6875rem; padding: 4px 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" title="Toggle automatic live refresh">
+              <span id="btn-auto-refresh-text">Live Sync: ON (3s)</span>
+            </button>
+            <div id="exec-status-badge" class="exec-status-badge safe" title="Overall Subscription &amp; Quota Health">
+              <span class="exec-status-dot" aria-hidden="true"></span>
+              <span id="exec-status-text">SAFE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exec-panels-grid">
+          <!-- Panel 1: Gemini Weekly Runway -->
+          <div class="exec-panel" id="exec-panel-weekly">
+            <div class="exec-panel-header">
+              <span class="exec-panel-label">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg>
+                Gemini • Weekly pace
+              </span>
+              <span class="exec-metric-large" id="exec-weekly-pct">—</span>
+            </div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Weekly Quota Runway">
+              <div class="progress-bar-fill" id="exec-weekly-bar" style="width: 100%;"></div>
+            </div>
+            <div class="exec-panel-details">
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg>
+                <span id="exec-weekly-countdown" class="exec-detail-text">Calculating reset...</span>
+              </div>
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+                <span id="exec-weekly-verdict" class="exec-detail-text highlight-green">Sustainable pacing</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 2: Gemini 5-Hour Burst -->
+          <div class="exec-panel" id="exec-panel-5h">
+            <div class="exec-panel-header">
+              <span class="exec-panel-label">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M215.79,118.17a8,8,0,0,0-7.79-6.17H152V32a8,8,0,0,0-13.66-5.66l-96,96a8,8,0,0,0,5.66,13.66H104v80a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,215.79,118.17ZM120,196.69V144a8,8,0,0,0-8-8H67.31l64-64v52.69a8,8,0,0,0,8,8h44.69Z"/></svg>
+                Gemini 5h Burst
+              </span>
+              <span class="exec-metric-large" id="exec-5h-pct">—</span>
+            </div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="5-Hour Limit Allowance">
+              <div class="progress-bar-fill" id="exec-5h-bar" style="width: 100%;"></div>
+            </div>
+            <div class="exec-panel-details">
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM140,80a12,12,0,1,1-12-12A12,12,0,0,1,140,80Zm-8,40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V128A8,8,0,0,0,132,120Z"/></svg>
+                <span id="exec-5h-tokens" class="exec-detail-text">0 tok in 5h window</span>
+              </div>
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a96,96,0,0,1-144.07,83.11l-3.32-3.32a8,8,0,0,1,11.31-11.31l3.32,3.32A80,80,0,1,0,71.43,71.43L64,78.86V48a8,8,0,0,0-16,0v48a8,8,0,0,0,8,8h48a8,8,0,0,0,0-16H75.31l7.43-7.43A96,96,0,0,1,224,128Z"/></svg>
+                <span id="exec-5h-forecast" class="exec-detail-text">Fully refreshed</span>
+              </div>
+              <div id="timeline-paused-notice" style="display: none; margin-top: 8px; padding: 6px 10px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; font-size: 0.72rem; color: var(--text-muted);">
+                5-Hour tokens age out continuously, but requests remain locked until <span id="timeline-paused-reset"></span>.
+              </div>
+              <div id="burst-sessions-drawer"></div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Claude & GPT Track -->
+          <div class="exec-panel" id="exec-panel-claude">
+            <div class="exec-panel-header">
+              <span class="exec-panel-label">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-68a28,28,0,0,1-28,28h-4v8a8,8,0,0,1-16,0v-8H104a8,8,0,0,1,0-16h36a12,12,0,0,0,0-24H116a28,28,0,0,1,0-56h4V72a8,8,0,0,1,16,0v8h16a8,8,0,0,1,0,16H116a12,12,0,0,0,0,24h24A28,28,0,0,1,168,148Z"/></svg>
+                Claude &amp; GPT
+              </span>
+              <span class="exec-metric-large" id="exec-claude-pct">—</span>
+            </div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Claude and GPT Weekly Allowance">
+              <div class="progress-bar-fill" id="exec-claude-bar" style="width: 100%;"></div>
+            </div>
+            <div class="exec-panel-details">
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg>
+                <span id="exec-claude-status" class="exec-detail-text">Separate allowance, hard stop</span>
+              </div>
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/></svg>
+                <span id="exec-claude-5h-sub" class="exec-detail-text">5h burst: 100% free • Hard stop</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 4: AI Credit Reserve & Active Context -->
+          <div class="exec-panel" id="exec-panel-credits">
+            <div class="exec-panel-header">
+              <span class="exec-panel-label">
+                <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z"/></svg>
+                AI Credit Bank
+              </span>
+              <span class="exec-metric-large" id="exec-credit-balance">—</span>
+            </div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="AI Credit Pool Remaining">
+              <div class="progress-bar-fill" id="exec-credits-bar" style="width: 100%;"></div>
+            </div>
+            <div class="exec-panel-details">
+              <div class="exec-detail-row">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-68a28,28,0,0,1-28,28h-4v8a8,8,0,0,1-16,0v-8H104a8,8,0,0,1,0-16h36a12,12,0,0,0,0-24H116a28,28,0,0,1,0-56h4V72a8,8,0,0,1,16,0v8h16a8,8,0,0,1,0,16H116a12,12,0,0,0,0,24h24A28,28,0,0,1,168,148Z"/></svg>
+                <span id="exec-credits-pool-sub" class="exec-detail-text">Google One AI credit reserve</span>
+              </div>
+              <div class="exec-detail-row" id="exec-context-footer">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM32,192V64H224V192Z"/></svg>
+                <span id="exec-active-context" class="exec-detail-text">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile-Only Fallback Ticker Row (hidden on desktop >=961px where #token-ticker-hud is visible) -->
+        <div class="exec-velocity-strip" id="exec-velocity-strip">
+          <div class="exec-velocity-item">
+            <span class="exec-velocity-beacon idle" id="exec-beacon-dot"></span>
+            <span class="exec-velocity-label">Velocity:</span>
+            <span class="exec-velocity-val" id="exec-burn-rate">0/m</span>
+            <span class="exec-velocity-sub" id="exec-delta-val">▲ +0</span>
+          </div>
+          <div class="exec-velocity-divider"></div>
+          <div class="exec-velocity-item">
+            <span class="exec-velocity-label">Active:</span>
+            <span class="exec-velocity-val" id="exec-active-model">—</span>
+            <span class="exec-velocity-sub highlight-purple" id="exec-active-cache">0.0% cache</span>
+          </div>
+          <div class="exec-velocity-divider"></div>
+          <div class="exec-velocity-item">
+            <span class="exec-velocity-label">Burst Headroom:</span>
+            <span class="exec-velocity-val highlight-green" id="exec-burst-headroom">100% free</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Demoted Dense Telemetry Sub-Drawer for Diagnostics -->
+      <details class="dense-telemetry-drawer" id="dense-telemetry-drawer" style="margin-top: 14px; margin-bottom: 24px;">
+        <summary class="dense-telemetry-summary">
+          <span class="dense-telemetry-label">Detailed Pace &amp; Diagnostics</span>
+          <span class="dense-telemetry-indicator" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+          </span>
+        </summary>
+        <div class="dense-telemetry-content">
+          <div style="margin-bottom: 12px;" id="runway-dual-bar">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">
+              <span>Weekly Consumed vs. Calendar Elapsed</span>
+              <span id="runway-consumed-pct" class="highlight-green" style="font-weight: 700; font-family: monospace;">—</span>
+            </div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Weekly Quota Runway Pace" style="position: relative; margin: 6px 0 6px 0; height: 12px; overflow: hidden; border-radius: var(--radius-card, 6px);">
+              <div class="progress-bar-fill" id="runway-bar-fill" style="width: 0%; height: 100%; border-radius: var(--radius-card, 6px); transition: all 0.5s ease;"></div>
+              <div id="runway-ceiling-marker" style="position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed #94a3b8; z-index: 8; left: 57.1%; transition: left 0.5s ease;" title="Day 4 Ceiling Marker: 57.1%"></div>
+              <div id="runway-time-needle" style="position: absolute; top: 0; bottom: 0; width: 2px; background: #0ea5e9; z-index: 10; left: 58%; box-shadow: 0 0 4px #0ea5e9;" title="Time Elapsed Marker"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted);">
+              <span style="font-family: monospace;">0%</span>
+              <span id="runway-time-legend" style="display: flex; align-items: center; gap: 8px; font-family: monospace;">
+                <span id="runway-reset-text">Reset in —</span>
+                <span id="runway-badge" class="badge green" style="display: none;">Sustainable</span>
+              </span>
+              <span style="font-family: monospace;">100%</span>
+            </div>
+          </div>
+
+          <!-- 3-Pillar KPI Grid -->
+          <div class="runway-kpi-grid">
+            <div class="runway-kpi-tile">
+              <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Pace</div>
+              <div id="runway-bvi-val" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--text-main); margin-top: 2px;">—</div>
+              <div id="runway-bvi-sub" style="font-size: 0.68rem; color: var(--accent-green); margin-top: 2px;">—</div>
+            </div>
+            <div class="runway-kpi-tile">
+              <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Daily Target</div>
+              <div id="runway-daily-target" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--text-main); margin-top: 2px;">—</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">budget / day</div>
+            </div>
+            <div class="runway-kpi-tile">
+              <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Exhaustion</div>
+              <div id="runway-exhaustion-val" style="font-size: 1.0625rem; font-weight: 700; font-family: monospace; color: var(--accent-green); margin-top: 2px;">None</div>
+              <div id="runway-exhaustion-sub" style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">—</div>
+            </div>
+          </div>
+
+          <!-- Diagnostic track bindings for headless & offline telemetry -->
+          <div style="display: none;">
+            <div id="runway-burst-footer"></div>
+            <span id="gemini-weekly-pct"></span>
+            <span id="gemini-weekly-sub"></span>
+            <div id="gemini-weekly-progress"></div>
+            <span id="gemini-5h-pct"></span>
+            <span id="gemini-5h-sub"></span>
+            <div id="gemini-5h-progress"></div>
+            <span id="gemini-overage-badge"></span>
+            <span id="claude-weekly-pct"></span>
+            <span id="claude-weekly-sub"></span>
+            <div id="claude-weekly-progress"></div>
+            <span id="claude-5h-pct"></span>
+            <span id="claude-5h-sub"></span>
+            <div id="claude-5h-progress"></div>
+            <div id="claude-fallback-callout">
+              <span id="claude-fallback-pct"></span>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Slot for Active Multi-Agent Swarms (Pulse Bento Tile) -->
+      <div id="now-swarms-slot"></div>
+
+    <!-- 2. TOP-LEVEL TAB NAVIGATION -->
+
+      <!-- Model Allowance Matrix (What each model provided in 5h / 1w) -->
+    <div class="section-card">
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Model Allowance Matrix (5-Hour vs. Weekly Cycle)</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+            Token yields and context caching performance delivered by each Antigravity model in active windows
+          </p>
+        </div>
+        <div class="toggle-group">
+          <button id="btn-toggle-5h" class="active">5-Hour Window</button>
+          <button id="btn-toggle-1w">Weekly Cycle (Sun–Sun)</button>
+        </div>
+      </div>
+
+      <!-- Interactive vs. Subagent Breakdown Pills (M16) -->
+      <div id="subagent-partition-pills" style="display: flex; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; align-items: center;">
+        <span class="badge camel" id="pill-all-turns" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600;">All: Loading...</span>
+        <span class="badge green" id="pill-interactive" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,218.42a8,8,0,0,0,9.86,9.86l41.54-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.84-12.28,8,8,0,0,0-5.11-1.12l-28.71,7.84,7.84-28.71a8,8,0,0,0-1.12-5.11A88,88,0,1,1,128,216Z"/></svg> Interactive: Loading...</span>
+        <span class="badge purple" id="pill-subagent" style="font-size: 0.75rem; padding: 3px 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,48H136V24a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16ZM88,112a16,16,0,1,1,16,16A16,16,0,0,1,88,112Zm80,0a16,16,0,1,1-16-16A16,16,0,0,1,168,112Zm-96,48a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,160Z"/></svg> Subagents: Loading...</span>
+      </div>
+
+      <div class="table-scroll-container">
+        <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Model Allowance Matrix and Token Breakdown (scrollable table)">
+          <table id="models-table">
+            <caption class="sr-only">Model Allowance Matrix and Token Breakdown</caption>
+            <thead>
+              <tr>
+                <th>Model Name</th>
+                <th>Turns</th>
+                <th>Uncached Prompt</th>
+                <th>Cached Prompt</th>
+                <th>Total Input</th>
+                <th>Cache Hit %</th>
+                <th>Total Output (Thinking)</th>
+                <th>Total Processed</th>
+                <th>Avoided Cost</th>
+              </tr>
+            </thead>
+            <tbody id="models-tbody">
+              <tr>
+                <td colspan="9" class="empty-state">Loading model telemetry...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-scroll-fade" aria-hidden="true"></div>
+      </div>
+    </div>
+
+      <!-- Milestone M96: Consumption & Era Analytics Deck -->
+      <div class="section-card horizon-analytics-deck" id="horizon-analytics-deck" style="margin-bottom: 24px;">
+        <div class="section-header horizon-deck-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 18px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <h2 class="section-title">Consumption &amp; Era Analytics</h2>
+              <span class="badge camel" id="horizon-active-badge">Lifetime</span>
+            </div>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Multi-horizon consumption velocity, subscription value, autonomous delegation, and diurnal rhythm
+            </p>
+          </div>
+          <!-- Horizon Selector Bar (Gate B7: #horizon-pill-bar) -->
+          <div class="horizon-pill-bar" id="horizon-pill-bar" role="group" aria-label="Consumption Horizon Selection">
+            <button type="button" class="horizon-pill-btn" data-horizon="active_week">Active Week</button>
+            <button type="button" class="horizon-pill-btn" data-horizon="current_month">Current Month</button>
+            <button type="button" class="horizon-pill-btn" data-horizon="pro_era">Pro Era</button>
+            <button type="button" class="horizon-pill-btn" data-horizon="ultra_era">Ultra 5x Era</button>
+            <button type="button" class="horizon-pill-btn" data-horizon="era_compare">Pro vs Ultra</button>
+            <button type="button" class="horizon-pill-btn active" data-horizon="lifetime">Lifetime</button>
+          </div>
+        </div>
+
+        <!-- Reactive Primary KPI Grid (Preserves all 8 canonical DOM IDs) -->
+        <div class="grid-kpi horizon-primary-kpis" style="margin-bottom: 16px;">
+          <div class="kpi-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="kpi-label" id="kpi-input-label">Lifetime Input Tokens</div>
+              <span class="kpi-velocity-sub" id="kpi-input-velocity"></span>
+            </div>
+            <div class="kpi-value" id="kpi-total-input">0</div>
+            <div class="kpi-sub">
+              Cached: <span class="highlight-green" id="kpi-cached-tokens">0</span> |
+              Uncached: <span class="highlight-camel" id="kpi-uncached-tokens">0</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="kpi-label" id="kpi-cache-label">Lifetime Cache Hit Ratio</div>
+              <span class="kpi-velocity-sub" id="kpi-cache-velocity"></span>
+            </div>
+            <div class="kpi-value" id="kpi-cache-ratio">0.0%</div>
+            <div class="kpi-sub">Context cache reuse efficiency</div>
+            <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Lifetime Cache Hit Ratio">
+              <div class="progress-bar-fill" id="kpi-cache-progress" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="kpi-label" id="kpi-output-label">Lifetime Output Tokens</div>
+              <span class="kpi-velocity-sub" id="kpi-output-velocity"></span>
+            </div>
+            <div class="kpi-value" id="kpi-total-output">0</div>
+            <div class="kpi-sub">
+              Thinking: <span class="highlight-purple" id="kpi-thinking-tokens">0</span> |
+              Answer: <span id="kpi-answer-tokens">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Derived Compact KPI Cards -->
+        <div class="horizon-derived-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <!-- 1. Subscription ROI & Avoided API Cost -->
+          <div class="derived-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Subscription ROI</div>
+            <div class="derived-kpi-value" id="kpi-horizon-roi" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-mint, #10B981); margin-top: 4px; font-family: monospace;">—</div>
+            <div class="derived-kpi-sub" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+              <span id="kpi-horizon-api-value">£0.00 API value</span> vs <span id="kpi-horizon-sub-cost">£20.00 plan</span>
+            </div>
+          </div>
+
+          <!-- 2. Autonomous Subagent Share -->
+          <div class="derived-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Autonomous Subagent Share</div>
+            <div class="derived-kpi-value" id="kpi-subagent-share" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-purple, #A855F7); margin-top: 4px; font-family: monospace;">—</div>
+            <div class="derived-kpi-sub" id="kpi-subagent-detail" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+              0 tokens delegated • 0 turns
+            </div>
+          </div>
+
+          <!-- 3. Wire Speed & Latency -->
+          <div class="derived-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Wire Speed &amp; Latency</div>
+            <div class="derived-kpi-value" id="kpi-wire-latency" style="font-size: 1.25rem; font-weight: 700; color: var(--camel-500, #855227); margin-top: 4px; font-family: monospace;">—</div>
+            <div class="derived-kpi-sub" id="kpi-wire-latency-detail" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+              p50 / p95 latency • tokens/sec
+            </div>
+          </div>
+
+          <!-- 4. Quota Friction (429 Rate) -->
+          <div class="derived-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Quota Friction (429 Rate)</div>
+            <div class="derived-kpi-value" id="kpi-quota-friction" style="font-size: 1.25rem; font-weight: 700; color: var(--status-normal, #047857); margin-top: 4px; font-family: monospace;">—</div>
+            <div class="derived-kpi-sub" id="kpi-quota-friction-detail" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+              0 strikes / 1k turns • 0 overage credits
+            </div>
+          </div>
+        </div>
+
+        <!-- Normalized Era Comparison Scorecard (#era-compare-scorecard) -->
+        <div id="era-compare-scorecard" class="era-compare-scorecard" style="display: none; margin-bottom: 20px; background: var(--surface-card, #FFFFFF); border: 1px solid var(--card-border); border-radius: 8px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">Normalized Era Comparison Scorecard</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Pro Era (prior to 13 Sep 2026) vs. Ultra 5x Era (since 13 Sep 2026 cutover)</div>
+            </div>
+            <span class="badge purple">Normalized / Day Basis</span>
+          </div>
+          <div class="table-scroll-container">
+            <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Era Comparison Scorecard (scrollable table)">
+              <table id="era-compare-table" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                <caption class="sr-only">Normalized Era Comparison: Pro Era vs Ultra 5x Era</caption>
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--card-border); text-align: left;">
+                    <th style="padding: 8px 10px; color: var(--text-muted); font-weight: 600;">Metric</th>
+                    <th style="padding: 8px 10px; color: var(--text-muted); font-weight: 600;">Pro Era Baseline</th>
+                    <th style="padding: 8px 10px; color: var(--text-muted); font-weight: 600;">Ultra 5x Era</th>
+                    <th style="padding: 8px 10px; color: var(--text-muted); font-weight: 600;">Progression Delta</th>
+                  </tr>
+                </thead>
+                <tbody id="era-compare-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <div class="table-scroll-fade" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <!-- Two-Column Analytics Studio Grid (.horizon-studio-grid) -->
+        <div class="horizon-studio-grid">
+          <!-- Left/Main Card: Multi-Grain Progression Chart -->
+          <div class="section-card progression-chart-card" id="progression-chart-card" style="margin-bottom: 0;">
+            <div class="section-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <div>
+                <h3 class="section-title" style="font-size: 0.9375rem;">Consumption Progression</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1px;">Multi-grain trajectory, era cutover &amp; cumulative volume</p>
+              </div>
+              <div class="progression-controls" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+                <!-- Grain Pills -->
+                <div class="toggle-group" id="progression-grain-toggles">
+                  <button type="button" class="toggle-btn active" data-grain="daily">Daily</button>
+                  <button type="button" class="toggle-btn" data-grain="weekly">Weekly</button>
+                  <button type="button" class="toggle-btn" data-grain="monthly">Monthly</button>
+                </div>
+                <!-- Curve Mode Pills -->
+                <div class="toggle-group" id="progression-curve-toggles">
+                  <button type="button" class="toggle-btn active" data-curve="periodic">Periodic</button>
+                  <button type="button" class="toggle-btn" data-curve="cumulative">Cumulative</button>
+                </div>
+                <!-- Metric Lens selector -->
+                <select id="progression-lens-select" aria-label="Select progression metric" class="form-control" style="font-size: 0.75rem; padding: 4px 8px;">
+                  <option value="tokens">Processed Tokens</option>
+                  <option value="roi">Subscription ROI &amp; API Value (£)</option>
+                  <option value="cache">KV Cache Hit % &amp; Uncached Burn</option>
+                  <option value="reasoning">Reasoning Intensity (Thinking %)</option>
+                  <option value="autonomy">Subagent vs Interactive Share</option>
+                  <option value="friction">429 Quota Friction &amp; Overage</option>
+                  <option value="latency">Wire Latency (p50 / p95 ms)</option>
+                </select>
+                <!-- Split-by selector -->
+                <select id="progression-split-select" aria-label="Split series by" class="form-control" style="font-size: 0.75rem; padding: 4px 8px;">
+                  <option value="total">Breakdown: Total (1 Curve)</option>
+                  <option value="family">Breakdown: Model Family</option>
+                  <option value="autonomy">Breakdown: Subagent vs Interactive</option>
+                  <option value="token_type">Breakdown: Token Type</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Dynamic Series Legend for Split Mode -->
+            <div id="progression-split-legend" style="display: none; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; font-size: 0.75rem;"></div>
+
+            <!-- SVG Container (Gate B7: #progression-chart-svg) -->
+            <div id="progression-chart-svg-container" style="position: relative; width: 100%; min-height: 260px;">
+              <svg id="progression-chart-svg" viewBox="0 0 760 280" style="width: 100%; height: auto; display: block; overflow: hidden;">
+                <title>Multi-Grain Consumption Progression Chart</title>
+              </svg>
+              <div id="progression-chart-tooltip" class="trendline-tooltip" style="display: none; position: absolute; pointer-events: none; z-index: 60;"></div>
+            </div>
+          </div>
+
+          <!-- Right Card: 24-Hour Diurnal Rhythm & Model Speed -->
+          <div class="section-card diurnal-rhythm-card" id="diurnal-rhythm-card" style="margin-bottom: 0;">
+            <div class="section-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <div>
+                <h3 class="section-title" style="font-size: 0.9375rem;">24-Hour Diurnal Rhythm</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1px;">UTC diurnal profile, model wire latency &amp; hourly load</p>
+              </div>
+              <div class="toggle-group" id="diurnal-mode-toggles">
+                <button type="button" class="toggle-btn active" data-diurnal-mode="latency">Latency by Model (ms)</button>
+                <button type="button" class="toggle-btn" data-diurnal-mode="volume">Hourly Token Volume</button>
+              </div>
+            </div>
+
+            <!-- Diurnal Rhythm SVG Container (Gate B7: #diurnal-rhythm-svg) -->
+            <div id="diurnal-rhythm-svg-container" style="position: relative; width: 100%; min-height: 220px;">
+              <svg id="diurnal-rhythm-svg" viewBox="0 0 460 240" style="width: 100%; height: auto; display: block; overflow: hidden;">
+                <title>24-Hour Diurnal Rhythm and Model Speed Chart</title>
+              </svg>
+              <div id="diurnal-rhythm-tooltip" class="trendline-tooltip" style="display: none; position: absolute; pointer-events: none; z-index: 60;"></div>
+            </div>
+
+            <!-- Model Color Legend -->
+            <div class="diurnal-model-legend" id="diurnal-model-legend" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; font-size: 0.72rem; color: var(--text-muted);">
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--chart-2);"></span> Carbon</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-mint, #10B981);"></span> Flash</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--camel-500, #855227);"></span> Pro</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-purple, #A855F7);"></span> Argon</span>
+              <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: var(--status-alert, #DC2626);"></span> Claude</span>
+            </div>
+
+            <!-- Diurnal Summary Callouts -->
+            <div class="diurnal-callouts" id="diurnal-callouts" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; font-size: 0.75rem;">
+              <div style="background: var(--card-bg-subtle, rgba(255,255,255,0.02)); border: 1px solid var(--card-border); border-radius: 6px; padding: 6px 10px;">
+                <span style="color: var(--accent-mint, #10B981); font-weight: 600;">Fastest Window:</span>
+                <span id="diurnal-fastest-window" style="color: var(--text-main); font-weight: 500; margin-left: 4px;">12:00–17:00 UTC</span>
+              </div>
+              <div style="background: var(--card-bg-subtle, rgba(255,255,255,0.02)); border: 1px solid var(--card-border); border-radius: 6px; padding: 6px 10px;">
+                <span style="color: var(--status-warning, #8F5B2E); font-weight: 600;">Peak Congestion:</span>
+                <span id="diurnal-peak-window" style="color: var(--text-main); font-weight: 500; margin-left: 4px;">19:00–22:00 UTC</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Recent Active Sessions -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Recent Active Sessions</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Latest conversation activity and context cache efficiency
+            </p>
+          </div>
+          <button class="btn-secondary" data-action="switch-tab" data-tab="tab-sessions" style="font-size: 0.75rem; padding: 4px 10px; cursor: pointer;">
+            Explore All Sessions in Sessions Tab &rarr;
+          </button>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Recent Sessions Overview (scrollable table)">
+            <table id="recent-sessions-table">
+              <caption class="sr-only">Recent Sessions Overview</caption>
+              <thead>
+                <tr>
+                  <th>Conversation Title</th>
+                  <th>Workspace</th>
+                  <th>Turns</th>
+                  <th>Total Input</th>
+                  <th>Cache %</th>
+                  <th>Coverage</th>
+                  <th>Avoided Cost</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recent-sessions-tbody">
+                <tr><td colspan="8" class="empty-state">Loading recent sessions...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div> <!-- /view-now -->
+
+    <!-- VIEW 2: Sessions -->
+    <div id="view-sessions" class="tab-view" style="display: none;" role="tabpanel" aria-labelledby="tab-sessions">
+      <!-- Controls & Search Toolbar -->
+      <div class="section-card" style="margin-bottom: 20px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; justify-content: space-between;">
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+            <div>
+              <label for="convo-search-input" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Search Sessions</label>
+              <input type="text" id="convo-search-input" placeholder="Filter title, ID or workspace..." class="form-control" style="width: 260px; font-size: 0.8125rem;" oninput="onConvoSearchChange()" />
+            </div>
+            <div>
+              <label for="workspace-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Workspace</label>
+              <select id="workspace-filter" style="min-width: 180px; font-size: 0.8125rem;">
+                <option value="all">All Workspaces</option>
+              </select>
+            </div>
+            <div>
+              <label for="agent-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Agent Role</label>
+              <select id="agent-filter" style="min-width: 140px; font-size: 0.8125rem;">
+                <option value="all">All Roles</option>
+                <option value="auditor">Auditor</option>
+                <option value="implementer">Implementer</option>
+                <option value="default">General Assistant</option>
+              </select>
+            </div>
+            <div>
+              <label for="subagent-view-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Hierarchy</label>
+              <select id="subagent-view-filter" style="min-width: 155px; font-size: 0.8125rem;">
+                <option value="main_only" selected>Main Sessions Only</option>
+                <option value="all">All (Include Subagents)</option>
+                <option value="subagents_only">Subagents Only</option>
+              </select>
+            </div>
+            <div>
+              <label for="convo-filter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase;">Conversation</label>
+              <select id="convo-filter" style="max-width: 280px; font-size: 0.8125rem;">
+                <option value="all">All Conversations (Aggregated)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <button id="btn-clear-filters" class="btn-secondary" data-action="clear-convo-filters" style="font-size: 0.8125rem; padding: 6px 12px; cursor: pointer;">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversations Overview Section -->
+      <div class="section-card" style="margin-bottom: 20px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Conversations</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Click column headers to sort, or click any conversation to inspect step-level turns
+            </p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <div class="sessions-view-toggle" role="group" aria-label="Sessions View Mode">
+              <button type="button" class="btn-view-toggle active" id="btn-view-tree" data-action="toggle-sessions-view" data-view-mode="tree" aria-pressed="true">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" style="margin-right: 4px; vertical-align: -1px;"><path d="M224,128a8,8,0,0,1-8,8H160v40h24a8,8,0,0,1,0,16H160v16a8,8,0,0,1-16,0V136a8,8,0,0,1,8-8h64A8,8,0,0,1,224,128ZM96,120H56a8,8,0,0,0-8,8v64a8,8,0,0,0,8,8H96a8,8,0,0,0,8-8V128A8,8,0,0,0,96,120Zm-8,64H64V136H88Zm112-96H160V48a8,8,0,0,0-16,0V88a8,8,0,0,0,8,8h48a8,8,0,0,0,0-16Z"/></svg>
+                Tree View
+              </button>
+              <button type="button" class="btn-view-toggle" id="btn-view-flat" data-action="toggle-sessions-view" data-view-mode="flat" aria-pressed="false">
+                <svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" style="margin-right: 4px; vertical-align: -1px;"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM184,88H72a8,8,0,0,0,0,16H184a8,8,0,0,0,0-16Zm0,32H72a8,8,0,0,0,0,16H184a8,8,0,0,0,0-16Zm0,32H72a8,8,0,0,0,0,16H184a8,8,0,0,0,0-16Z"/></svg>
+                Flat View
+              </button>
+            </div>
+            <span style="font-size: 0.8125rem; color: var(--text-muted);" id="convo-table-count">0 items</span>
+          </div>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Active Conversations and Sessions (scrollable table)">
+            <table id="conversations-table">
+              <caption class="sr-only">Active Conversations and Sessions</caption>
+              <thead>
+                <tr>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="title" title="Sort by Title">Conversation Title <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="workspace" title="Sort by Workspace">Workspace <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="turns" title="Sort by Turns">Turns <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="input" title="Sort by Input">Total Input <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="cache" title="Sort by Cache %">Cache % <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th>Subscription Coverage</th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="overage" title="Sort by Overage">Actual Overage <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                  <th style="cursor: pointer;" data-action="toggle-convo-sort" data-sort-key="cost" title="Sort by Avoided Cost">Avoided Cost <svg width="10" height="10" viewBox="0 0 256 256" fill="currentColor" style="opacity: 0.5; vertical-align: -1px;" aria-hidden="true"><path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z"/></svg></th>
+                </tr>
+              </thead>
+              <tbody id="conversations-tbody">
+                <tr>
+                  <td colspan="8" class="empty-state">No telemetry data loaded. Run <code>python3 scripts/export_dashboard.py</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+        <div id="convo-pagination-controls" class="pagination-controls" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 4px 4px 4px; margin-top: 8px;">
+          <span id="convo-page-info" class="page-info" style="font-size: 0.8125rem; color: var(--text-muted);">Page 1 of 1 (0 conversations)</span>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-convo-prev" class="btn-secondary page-btn" data-action="prev-convo-page" disabled style="font-size: 0.75rem; cursor: pointer;">&larr; Previous</button>
+            <button id="btn-convo-next" class="btn-secondary page-btn" data-action="next-convo-page" disabled style="font-size: 0.75rem; cursor: pointer;">Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cache-Efficiency Coaching & Model-Flip Diagnostics (ADR-038 / M5) -->
+      <div id="cache-coaching-section" style="margin-bottom: 20px;"></div>
+
+      <!-- Truncation audit widget container (ADR-039 / UX reorder) -->
+      <div id="sessions-degraded-widget-container" style="display: none; margin-bottom: 20px;"></div>
+
+      <!-- Turn-by-Turn Inspection Section -->
+      <div class="section-card" id="turns-card" style="display: none; margin-top: 24px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="turns-title">Turn-by-Turn Telemetry Inspection</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Per-step token breakdown, reasoning tokens, cache hit rates, and coverage status
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);" id="turns-table-count">0 turns</span>
+            <button class="btn-secondary" data-action="close-turns-card" style="font-size: 0.75rem; padding: 4px 8px; cursor: pointer;">Close &times;</button>
+          </div>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Conversation Turns and Token Details (scrollable table)">
+            <table id="turns-table">
+              <caption class="sr-only">Conversation Turns and Token Details</caption>
+              <thead>
+                <tr>
+                  <th>Step</th>
+                  <th>Timestamp</th>
+                  <th>Model</th>
+                  <th>Uncached Prompt</th>
+                  <th>Cached Prompt</th>
+                  <th>Total Input</th>
+                  <th>Cache %</th>
+                  <th>Output (Thinking + Answer)</th>
+                  <th>Coverage Status</th>
+                  <th>Avoided Cost</th>
+                  <th>Response ID</th>
+                </tr>
+              </thead>
+              <tbody id="turns-tbody">
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div> <!-- /view-sessions -->
+
+    <!-- VIEW 3: Projects -->
+    <div id="view-projects" class="tab-view" style="display: none;" role="tabpanel" aria-labelledby="tab-projects">
+      <div class="grid-kpi" id="projects-portfolio-kpis">
+        <!-- Dynamic Portfolio KPI Cards -->
+      </div>
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Portfolio Projects &amp; Git Branch Costing</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Hierarchical token consumption, context caching efficiency, and inference cost by project and active Git branch
+            </p>
+          </div>
+          <div class="badges">
+            <span class="badge camel">Multi-Project</span>
+            <span class="badge purple">Git Branch Costing</span>
+          </div>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Project Workspaces and Git Branch Telemetry (scrollable table)">
+            <table id="projects-table">
+              <caption class="sr-only">Project Workspaces and Git Branch Telemetry</caption>
+              <thead>
+                <tr>
+                  <th>Project &amp; Filesystem Path</th>
+                  <th>Branches</th>
+                  <th>Turns</th>
+                  <th>Total Input</th>
+                  <th>Cache %</th>
+                  <th>Subscription Coverage</th>
+                  <th>Actual Overage</th>
+                  <th>Avoided Cost</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="projects-table-tbody">
+                <tr><td colspan="9" class="empty-state">Loading portfolio telemetry...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div> <!-- /view-projects -->
+
+    <!-- VIEW 3: Swarms & Tools (ADR-037 / M24) -->
+    <div id="view-swarms" class="tab-view" style="display: none;" role="tabpanel" aria-labelledby="tab-swarms">
+      <!-- 42px Compact Fleet Metric Ribbon (Reclaiming 80% Vertical Space) -->
+      <div class="swarm-compact-ribbon" role="region" aria-label="Swarms Fleet Metrics">
+        <div class="ribbon-segment">
+          <span class="ribbon-label">FLEET:</span>
+          <span class="ribbon-val highlight-camel" id="kpi-swarm-count">0 Swarms</span>
+          <span class="ribbon-sub" id="kpi-swarm-sub">(0 agents)</span>
+        </div>
+        <div class="ribbon-divider" aria-hidden="true">|</div>
+        <div class="ribbon-segment">
+          <span class="ribbon-label">TOKENS:</span>
+          <span class="ribbon-val highlight-green" id="kpi-swarm-tokens">0</span>
+          <span class="ribbon-sub" id="kpi-swarm-cache">(0% cached)</span>
+        </div>
+        <div class="ribbon-divider" aria-hidden="true">|</div>
+        <div class="ribbon-segment">
+          <span class="ribbon-label">PACE:</span>
+          <span class="ribbon-val highlight-amber" id="kpi-swarm-pace">0 toks/turn</span>
+          <span class="ribbon-sub" id="kpi-swarm-thinking">(0 thinking)</span>
+        </div>
+        <div class="ribbon-divider" aria-hidden="true">|</div>
+        <div class="ribbon-segment">
+          <span class="ribbon-label">VALUE:</span>
+          <span class="ribbon-val highlight-purple" id="kpi-swarm-avoided">£0.00</span>
+          <span class="ribbon-sub" id="kpi-swarm-overage">(100% in plan)</span>
+        </div>
+      </div>
+
+      <!-- Sub-View Navigation Toggle within Swarms -->
+      <div class="swarms-subview-nav" style="display: flex; gap: 8px; margin-bottom: 20px; align-items: center;">
+        <div class="subview-toggle-group" role="tablist" aria-label="Swarms Explorer Views">
+          <button type="button" class="btn-subview-toggle active" id="btn-subview-dag" role="tab" aria-selected="true" aria-controls="swarms-subview-dag" data-action="switch-swarms-subview" data-subview="dag">
+            <span aria-hidden="true" style="margin-right: 6px;">🐝</span> Swarms Topology &amp; DAG
+          </button>
+          <button type="button" class="btn-subview-toggle" id="btn-subview-skills" role="tab" aria-selected="false" aria-controls="swarms-subview-skills" data-action="switch-swarms-subview" data-subview="skills">
+            <span aria-hidden="true" style="margin-right: 6px;">🛠️</span> Skills &amp; Capabilities
+          </button>
+        </div>
+      </div>
+
+      <!-- SUBVIEW 1: Swarms Topology & DAG -->
+      <div id="swarms-subview-dag" role="tabpanel" aria-labelledby="btn-subview-dag">
+        <div class="section-card" style="margin-bottom: 24px;">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Subagent Swarm Lineage Explorer</h2>
+              <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+                Parent-child execution topologies, token burn velocity, prompt cache efficiency, and 3-tier subagent routing
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge camel" id="swarm-runtime-tools-badge">10,197 Tool Invocations</span>
+              <span class="code-pill" id="swarm-selected-pill">Select a Swarm</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start;">
+            <!-- Left: Swarms Master List & Filter/Sort Controls -->
+            <div>
+              <div class="swarm-toolbar" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">
+                    Discovered Swarms (<span id="swarm-list-count">0</span>)
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <select id="swarm-project-filter" class="form-control" aria-label="Filter swarms by project" style="flex: 1.1; font-size: 0.75rem; padding: 5px 8px; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); border-radius: 6px;" onchange="handleSwarmFilterChange()">
+                    <option value="all">All Projects</option>
+                  </select>
+                  <select id="swarm-sort-select" class="form-control" aria-label="Sort swarms" style="flex: 0.9; font-size: 0.75rem; padding: 5px 8px; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); border-radius: 6px;" onchange="handleSwarmSortChange()">
+                    <option value="recent">Recent</option>
+                    <option value="tokens">Tokens</option>
+                    <option value="cache">Cache %</option>
+                    <option value="subagents">Subagents</option>
+                    <option value="value">Value</option>
+                  </select>
+                </div>
+              </div>
+              <div id="swarm-list-container" role="region" tabindex="0" aria-label="Subagent Swarms List (scrollable)" style="max-height: 600px; overflow-y: auto; padding-right: 6px;">
+                <!-- Dynamic Swarm Cards -->
+              </div>
+            </div>
+
+            <!-- Right: Swarm Detail & Interactive SVG DAG -->
+            <div>
+              <div id="swarm-detail-header" style="background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                  <div>
+                    <h3 id="swarm-detail-title" style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px 0;">Select a swarm to inspect topology</h3>
+                    <div style="display: flex; gap: 8px; align-items: center; font-size: 0.75rem; color: var(--text-muted); flex-wrap: wrap;">
+                      <span id="swarm-detail-ws" class="badge" style="cursor: pointer;" title="Click to view in Projects tab">Workspace</span>
+                      <span id="swarm-detail-duration" style="display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg> Duration: --</span>
+                      <span id="swarm-detail-subagents" style="display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,48H136V24a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16ZM88,112a16,16,0,1,1,16,16A16,16,0,0,1,88,112Zm80,0a16,16,0,1,1-16-16A16,16,0,0,1,168,112Zm-96,48a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,160Z"/></svg> Subagents: --</span>
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div id="swarm-detail-cost" style="font-size: 1.125rem; font-weight: 700; font-family: monospace; color: var(--accent-green);">£0.00 avoided</div>
+                    <div id="swarm-detail-overage" style="font-size: 0.72rem; color: var(--text-muted);">£0.00 actual overage (In Quota)</div>
+                  </div>
+                </div>
+
+                <!-- Swarm Telemetry Ribbon (Token Metrics & Cache Breakdown) -->
+                <div id="swarm-telemetry-ribbon" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 10px 0; padding: 10px 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);">
+                  <!-- Dynamic Telemetry Pills -->
+                </div>
+
+                <!-- Tier Distribution Pills -->
+                <div id="swarm-detail-tiers" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <!-- Dynamic Tier Pills -->
+                </div>
+
+                <!-- Role Budget Distribution Bar -->
+                <div id="swarm-role-budget-container" style="margin-top: 10px;">
+                  <!-- Dynamic Role Budget Bar -->
+                </div>
+              </div>
+
+              <!-- SVG DAG Canvas -->
+              <div style="position: relative;">
+                <div id="swarm-dag-container" style="width: 100%; min-height: 460px; background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; position: relative;">
+                  <!-- Rendered SVG Tree / DAG -->
+                </div>
+
+                <!-- Node Hover / Click Detail Card -->
+                <div id="swarm-node-detail" style="display: none; margin-top: 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+                  <!-- Node inspection info -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- /#swarms-subview-dag -->
+
+      <!-- SUBVIEW 2: Skills & Capabilities -->
+      <div id="swarms-subview-skills" role="tabpanel" aria-labelledby="btn-subview-skills" style="display: none;">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Tool Execution &amp; Skill Performance Analytics</h2>
+              <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+                Empirical frequency distributions, sandbox bypass ratios, and execution error rates across 10,000+ vault calls
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="badge camel" id="tool-total-badge">10,197 Total Calls</span>
+              <span class="badge amber" id="tool-bypass-badge">47.8% Sandbox Bypass</span>
+            </div>
+          </div>
+
+          <!-- Tool Categories Summary -->
+          <div id="tool-categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;">
+            <!-- Category Cards -->
+          </div>
+
+          <!-- Tool Distribution Table -->
+          <div class="table-scroll-container" style="margin-bottom: 24px;">
+            <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Tool Invocations and Subagent Execution Statistics (scrollable table)">
+              <table id="tools-table">
+                <caption class="sr-only">Tool Invocations and Subagent Execution Statistics</caption>
+                <thead>
+                  <tr>
+                    <th>Tool Name</th>
+                    <th>Category</th>
+                    <th>Invocations</th>
+                    <th>Share of Total</th>
+                    <th>Sandbox Bypass</th>
+                    <th>Error Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="tools-tbody">
+                  <tr><td colspan="6" class="empty-state">Loading tool analytics...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-scroll-fade" aria-hidden="true"></div>
+          </div>
+
+          <!-- Skill Activations Section -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--text-main); margin: 0 0 2px 0;">
+                  Active Skills &amp; Specialized Capability Invocations
+                </h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">
+                  Sanitized inventory across system plugins and custom workspace capabilities
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="badge camel" id="skills-count-badge">65 skills active</span>
+                <input type="text" id="skill-search-input" placeholder="Filter skills..." class="form-control" style="font-size: 0.75rem; width: 160px; padding: 4px 8px;" aria-label="Filter skills by name or path" />
+                <select id="skill-type-select" class="form-control" style="font-size: 0.75rem; padding: 4px 8px;" aria-label="Filter skills by type">
+                  <option value="all">All Types</option>
+                  <option value="builtin">Plugin / Built-in</option>
+                  <option value="custom">Custom Workspace</option>
+                </select>
+              </div>
+            </div>
+            <div id="skills-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+              <!-- Skill Cards -->
+            </div>
+          </div>
+        </div>
+      </div> <!-- /#swarms-subview-skills -->
+    </div> <!-- /view-swarms -->
+
+    <!-- VIEW 4: Billing -->
+    <div id="view-billing" class="tab-view" style="display: none;" role="tabpanel" aria-labelledby="tab-billing">
+      <!-- Billing & Plan Financials Command Banner -->
+      <div class="quota-banner" style="margin-bottom: 24px;">
+        <!-- Monthly Pro Subscription (£18.99/mo) -->
+        <div class="quota-box">
+          <div class="quota-title">
+            <span id="quota-sub-tier-title">Google AI Ultra (20 TB - 5x AI Usage)</span>
+            <span class="code-pill" id="quota-sub-renewal-badge">Renews 13 Oct</span>
+          </div>
+          <div class="quota-value highlight-camel" id="quota-sub-price">£18.99</div>
+          <div class="quota-sub" id="quota-sub-status">
+            Renews in 19 days • £0 marginal cost in quota
+          </div>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+            Plan Value: <strong class="highlight-green" id="quota-sub-roi">£0.00 API equiv</strong> (<span id="quota-sub-roi-multiplier">0.0x ROI</span>)
+          </div>
+        </div>
+
+        <!-- Prepaid AI Credit Bank (2,500 Credits Add-on) -->
+        <div class="quota-box">
+          <div class="quota-title">
+            <span>Prepaid Overage Credits</span>
+            <span class="badge green" id="quota-credits-badge">0 Credits Burned</span>
+          </div>
+          <div class="quota-value highlight-green" id="quota-credits-remaining-hero">2,500 Left</div>
+          <div class="quota-sub" id="quota-bank-sub">
+            Pack: 2,500 credits (£23.99) • Debited outside quota
+          </div>
+          <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Prepaid Overage Credits Balance" style="margin-top: 8px;">
+            <div class="progress-bar-fill amber" id="quota-credits-progress" style="width: 0%"></div>
+          </div>
+          <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+            Burn: <strong class="highlight-amber" id="quota-credit-burn">£0.00</strong> (<span id="quota-credits-burned-count">0</span> credits) • Balance: <strong id="quota-bank-balance">£23.99</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historical Weekly Trends & 8–12 Week Trendline Chart (M4 / ADR-039) -->
+      <div class="section-card" id="weekly-trends-card" style="margin-bottom: 24px;">
+        <div class="section-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <h2 class="section-title">Historical Weekly Trends (Vault Archive)</h2>
+              <span class="badge camel" id="trends-cycle-count-badge">12 Cycles Analyzed</span>
+            </div>
+            <p id="trends-subtitle" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              8–12 week cycle history: token velocity, cache efficiency, developer API spend, and overage burn
+            </p>
+          </div>
+          <div class="toggle-group" id="trends-metric-toggles">
+            <button id="btn-trend-tokens" class="active">Tokens</button>
+            <button id="btn-trend-cost">Cost &amp; Overage</button>
+            <button id="btn-trend-bvi">Peak BVI</button>
+            <button id="btn-trend-roi">ROI &amp; Avoided Cost</button>
+          </div>
+        </div>
+
+        <!-- 4-Metric Macro Ribbon -->
+        <div class="trends-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 18px;">
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">AVERAGE WEEKLY TOKENS</div>
+            <div id="trends-kpi-avg-tokens" style="font-size: 1.25rem; font-weight: 700; color: var(--camel-500); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">8–12 week rolling average</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">AVERAGE WEEKLY SPEND</div>
+            <div id="trends-kpi-avg-cost" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-green); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Developer API equivalent value</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">PEAK WEEK VOLUME</div>
+            <div id="trends-kpi-peak-tokens" style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; font-family: monospace;">—</div>
+            <div id="trends-kpi-peak-label" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Highest recorded week</div>
+          </div>
+          <div class="trends-kpi-card" style="background: var(--card-bg-subtle, rgba(255,255,255,0.03)); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">RECENT VELOCITY</div>
+            <div id="trends-kpi-growth" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-purple); margin-top: 4px; font-family: monospace;">—</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">vs. previous completed cycle</div>
+          </div>
+        </div>
+
+        <!-- SVG Trendline Chart Container -->
+        <div id="weekly-trends-svg-container" style="position: relative; width: 100%; min-height: 240px; margin-bottom: 16px;">
+          <svg id="weekly-trends-svg" viewBox="0 0 760 220" style="width: 100%; height: auto; display: block; overflow: visible;">
+            <title>Weekly Token Consumption Trends Chart</title>
+          </svg>
+          <div id="weekly-trends-tooltip" class="trendline-tooltip" style="display: none; position: absolute; pointer-events: none; z-index: 50;"></div>
+        </div>
+
+        <!-- Historical Cycles Summary Table -->
+        <div id="billing-history-table" class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Historical Weekly Token Trends and Expenditure (scrollable table)">
+            <table id="weekly-trends-table">
+              <caption class="sr-only">Historical Weekly Token Trends and Expenditure</caption>
+              <thead>
+                <tr>
+                  <th id="th-weekly-cycle">Weekly Cycle Window</th>
+                  <th>Turns</th>
+                  <th>Processed Tokens</th>
+                  <th>Cache Hit Ratio</th>
+                  <th>API Value / Cost</th>
+                  <th>Overage Burn</th>
+                  <th>Peak BVI</th>
+                  <th>Cycle Status</th>
+                </tr>
+              </thead>
+              <tbody id="weekly-trends-tbody">
+                <tr>
+                  <td colspan="8" class="empty-state">Loading historical weekly trends...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Google One AI Credit Activity Reconciliation (Official Billing Alignment) -->
+      <div class="section-card" id="credit-reconciliation-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Google One AI Credit Activity Reconciliation</h2>
+            <p id="reconciliation-subtitle" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Deterministic hourly deductions reconciling with the official Google One activity statement (£23.99 / 2,500 credits = £0.0096 / credit)
+            </p>
+          </div>
+          <div>
+            <span class="badge amber" id="reconciliation-total-badge">0 Credits Burned</span>
+          </div>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Google One AI Credit Activity Reconciliation (scrollable table)">
+            <table id="reconciliation-table">
+              <caption class="sr-only">Google One AI Credit Activity Reconciliation</caption>
+              <thead>
+                <tr>
+                  <th>Billing Hour (UTC)</th>
+                  <th>Activity Description</th>
+                  <th>Turns Count</th>
+                  <th>AI Credits Deducted</th>
+                  <th id="th-cash-burn">Cash Burn (£0.0096/credit)</th>
+                  <th>Compute Attribution</th>
+                </tr>
+              </thead>
+              <tbody id="reconciliation-tbody">
+                <tr>
+                  <td colspan="6" class="empty-state">No AI credit deductions recorded. Usage within Pro subscription quota.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-scroll-fade" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div> <!-- /view-billing -->
+
+    <!-- VIEW 5: Plan -->
+    <div id="view-plan" class="tab-view" style="display: none;" role="tabpanel" aria-labelledby="tab-plan">
+      <div class="section-card" style="margin-bottom: 24px;">
+        <div class="section-header" style="align-items: flex-start;">
+          <div>
+            <h2 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <span>Interactive What-If Workload Simulator &amp; Quota Stress Planner</span>
+              
+            </h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">
+              Simulate multi-agent swarm token burn, test 5h burst exhaustion boundaries, predict HTTP 429 lockouts, and evaluate plan tier capacity (Pro vs Enterprise 5x vs Ultra 10x).
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <label for="sim-baseline-select" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Baseline:</label>
+            <select id="sim-baseline-select" class="badge" aria-label="Simulation baseline workload" style="background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;" onchange="onSimulatorInputChange()">
+              <option value="live">Current Live Quota</option>
+              <option value="fresh">Fresh (0% Used Baseline)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Archetype Quick-Select Carousel -->
+        <div style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Multi-Agent Archetype Presets</span>
+            <select id="sim-archetype-select" aria-label="Multi-Agent Archetype Presets" style="display: none;" onchange="onArchetypeSelectChange(this.value)">
+              <option value="custom">Custom</option>
+              <option value="deep_refactor_swarm">Deep Refactor Swarm</option>
+              <option value="hydrogen_xhigh_sprint">Hydrogen XHigh Sprint</option>
+              <option value="codebase_audit">Codebase Audit &amp; Security Scan</option>
+              <option value="rapid_prototyping_burst">Rapid Prototyping Burst</option>
+              <option value="claude_opus_deep_dive">Claude Opus 4.6 Stress Test</option>
+              <option value="subagent_fleet">Subagent Fleet (Lite/Fast)</option>
+            </select>
+          </div>
+          <div class="sim-archetypes-row" id="sim-archetypes-container" role="region" tabindex="0" aria-label="Simulation Workload Archetypes Carousel (scrollable)">
+            <div class="sim-archetype-card active" data-archetype="deep_refactor_swarm" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,48H136V24a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16ZM88,112a16,16,0,1,1,16,16A16,16,0,0,1,88,112Zm80,0a16,16,0,1,1-16-16A16,16,0,0,1,168,112Zm-96,48a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,160Z"/></svg>
+                  Deep Refactor Swarm
+                </span>
+                <span class="code-pill">40 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.1 Pro High • 120k prompt • 88% cache • 8k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="hydrogen_xhigh_sprint" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M215.79,118.17a8,8,0,0,0-7.79-6.17H152V32a8,8,0,0,0-13.66-5.66l-96,96a8,8,0,0,0,5.66,13.66H104v80a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,215.79,118.17ZM120,196.69V144a8,8,0,0,0-8-8H67.31l64-64v52.69a8,8,0,0,0,8,8h44.69Z"/></svg>
+                  Hydrogen XHigh Sprint
+                </span>
+                <span class="code-pill">30 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 4 Hydrogen XHigh • 110k prompt • 93% cache • 1/6x burn</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="codebase_audit" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+                  Codebase Audit
+                </span>
+                <span class="code-pill">60 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.8 Flash High • 200k prompt • 94% cache • 2.5k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="rapid_prototyping_burst" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M215.79,118.17a8,8,0,0,0-7.79-6.17H152V32a8,8,0,0,0-13.66-5.66l-96,96a8,8,0,0,0,5.66,13.66H104v80a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,215.79,118.17ZM120,196.69V144a8,8,0,0,0-8-8H67.31l64-64v52.69a8,8,0,0,0,8,8h44.69Z"/></svg>
+                  Rapid Prototyping
+                </span>
+                <span class="code-pill">25 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini 3.8 Flash Medium • 45k prompt • 75% cache • 1.5k thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="claude_opus_deep_dive" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></svg>
+                  Claude Opus Stress
+                </span>
+                <span class="code-pill" style="color: var(--accent-red); border-color: var(--accent-red);">35 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Claude Opus 4.6 • 95k prompt • 92% cache • 6k thinking (Exhaustion Test)</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="subagent_fleet" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1,0-16,67.88,67.88,0,0,1,54.4,27.2A8,8,0,0,1,244.8,150.4ZM128,144a56,56,0,1,0-56-56A56.06,56.06,0,0,0,128,144Zm0-96a40,40,0,1,1-40,40A40,40,0,0,1,128,48Zm68,160a8,8,0,0,1-8,8H68a8,8,0,0,1,0-16H188A8,8,0,0,1,196,208Zm-31.42-32a8,8,0,0,0-1.16-5.52,72,72,0,0,0-70.84,0,8,8,0,0,0-1.16,5.52,8,8,0,0,0,8,6.48h57.2A8,8,0,0,0,164.58,176Z"/></svg>
+                  Subagent Fleet
+                </span>
+                <span class="code-pill">100 turns</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Gemini Flash Lite • 30k prompt • 85% cache • 500 thinking</div>
+            </div>
+            <div class="sim-archetype-card" data-archetype="custom" data-action="select-archetype">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M227.31,73.37,182.63,28.69a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31l123.31-123.3A16,16,0,0,0,227.31,73.37ZM92.69,208H48V163.31l88-88L180.69,120Zm123.3-123.32L204.69,96,160,51.31l11.31-11.31,44.68,44.68Z"/></svg>
+                  Custom Swarm
+                </span>
+                <span class="code-pill">Sliders</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Fully customized parameters for bespoke agent topologies</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Simulation Layout -->
+        <div class="sim-grid">
+          <!-- Left Column: Interactive Controls -->
+          <div style="background: var(--card-hover); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px;">
+            <h3 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>Workload Parameters</span>
+            </h3>
+
+            <!-- Model Selector -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-model-select">Model &amp; Provider Track</label>
+                <span id="sim-track-badge" class="code-pill">Track 1: Gemini</span>
+              </div>
+              <select id="sim-model-select" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-size: 0.875rem;" onchange="onSimulatorInputChange()">
+                <optgroup label="Gemini Models">
+                  <option value="1427">Gemini 4 Carbon (High) - [1427]</option>
+                  <option value="1437">Gemini 4 Carbon (Medium) - [1437]</option>
+                  <option value="1438">Gemini 4 Carbon (Low) - [1438]</option>
+                  <option value="1417">Gemini 4 Argon (High) - [1417]</option>
+                  <option value="1418">Gemini 4 Argon (Medium) - [1418]</option>
+                  <option value="1419">Gemini 4 Argon (Low) - [1419]</option>
+                  <option value="1667">Orchestrator (Carbon) - [1667]</option>
+                  <option value="1681">Orchestrator (Argon) - [1681]</option>
+                  <option value="1669">Orchestrator Executor (Hydrogen) - [1669]</option>
+                  <option value="1528">Gemini 4 Hydrogen (XHigh) - [1528]</option>
+                  <option value="1525">Gemini 4 Hydrogen (High) - [1525]</option>
+                  <option value="1526">Gemini 4 Hydrogen (Medium) - [1526]</option>
+                  <option value="1527">Gemini 4 Hydrogen (Low) - [1527]</option>
+                  <option value="1318">Gemini 3.8 Flash (High) - [1318]</option>
+                  <option value="1319">Gemini 3.8 Flash (Medium) - [1319]</option>
+                  <option value="1016" selected>Gemini 3.1 Pro (High) - [1016] (Sunset 2026-10-13)</option>
+                  <option value="1036">Gemini 3.1 Pro (Low Reasoning) - [1036] (Sunset 2026-10-13)</option>
+                  <option value="1050">Gemini Flash Lite (Subagent Tier 1) - [1050]</option>
+                  <option value="1298">Gemini 3.7 Flash (High) - [1298]</option>
+                </optgroup>
+                <optgroup label="Claude &amp; GPT Models (Hard 429 limit)">
+                  <option value="1400">Claude Opus 5.5 (Low) - [1400]</option>
+                  <option value="1401">Claude Opus 5.5 (Medium) - [1401]</option>
+                  <option value="1402">Claude Opus 5.5 (High) - [1402]</option>
+                  <option value="1403">Claude Sonnet 5.5 (Low) - [1403]</option>
+                  <option value="1404">Claude Sonnet 5.5 (Medium) - [1404]</option>
+                  <option value="1405">Claude Sonnet 5.5 (High) - [1405]</option>
+                  <option value="1026">Claude Opus 4.6 (Thinking) - [1026] (Sunset 2026-10-03)</option>
+                  <option value="1035">Claude Sonnet 4.6 (Thinking) - [1035] (Sunset 2026-10-03)</option>
+                  <option value="342">GPT-OSS 120B (Medium) - [342] (Sunset 2026-11-18)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Subscription Plan Tier -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-plan-select">Plan Tier Profile</label>
+                <span id="sim-plan-badge" class="code-pill">1x Capacity</span>
+              </div>
+              <select id="sim-plan-select" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-size: 0.875rem;" onchange="onSimulatorInputChange()">
+                <option value="pro">Pro (1×)</option>
+                <option value="ultra_5x">Ultra (5×)</option>
+                <option value="ultra_20x">Ultra (20×)</option>
+              </select>
+            </div>
+
+            <!-- Turn Count Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-turns-slider">Turn Count</label>
+                <span class="sim-control-val" id="sim-turns-val">40 turns</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-turns-slider" min="1" max="150" value="40" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Prompt Context Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-prompt-slider">Average prompt size (tokens)</label>
+                <span class="sim-control-val" id="sim-prompt-val">120,000 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-prompt-slider" min="1000" max="500000" step="1000" value="120000" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Cache Hit Ratio Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-cache-slider">Cache hit ratio (%)</label>
+                <span class="sim-control-val" id="sim-cache-val">88%</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-cache-slider" min="0" max="99" value="88" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Thinking Token Depth Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-thinking-slider">Thinking tokens per turn</label>
+                <span class="sim-control-val" id="sim-thinking-val">8,000 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-thinking-slider" min="0" max="32000" step="500" value="8000" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Candidate Answer Output Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-output-slider">Candidate answer output (tokens)</label>
+                <span class="sim-control-val" id="sim-output-val">1,500 tokens</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-output-slider" min="200" max="8000" step="100" value="1500" oninput="onSimulatorInputChange()">
+            </div>
+
+            <!-- Turn Pacing Slider -->
+            <div class="sim-control-group">
+              <div class="sim-control-header">
+                <label for="sim-pace-slider">Minutes between turns</label>
+                <span class="sim-control-val" id="sim-pace-val">2.5 min/turn</span>
+              </div>
+              <input type="range" class="sim-slider" id="sim-pace-slider" min="0.2" max="10.0" step="0.1" value="2.5" oninput="onSimulatorInputChange()">
+            </div>
+
+            <div style="font-size: 0.6875rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 12px;">
+              <em>Pure-Python client simulation: recalculates deterministically on slider input without network roundtrips.</em>
+            </div>
+          </div>
+
+          <!-- Right Column: Predictive Stress Outcomes -->
+          <div>
+            <!-- Hero Safety Gauge & Status Card -->
+            <div class="section-card" style="margin-bottom: 20px; border-left: 4px solid var(--camel-500);" id="sim-status-hero">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Forecasted Quota Health</span>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                    <span id="sim-status-badge" class="badge green" style="font-size: 0.9375rem; padding: 4px 10px;">Safe Zone</span>
+                    <span id="sim-risk-badge" class="code-pill">Low Risk</span>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">5h Burst Headroom</span>
+                  <div style="font-size: 1.5rem; font-weight: 800; font-family: monospace; color: var(--text-main);" id="sim-gauge-pct">
+                    74.2% Available
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gauge Progress Bar -->
+              <div class="progress-bar-bg" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Simulator Headroom Gauge" style="height: 10px; border-radius: 5px; margin-bottom: 12px;">
+                <div id="sim-gauge-fill" class="progress-bar-fill" style="width: 25.8%; background: var(--accent-green);"></div>
+              </div>
+
+              <!-- Recommendation Text -->
+              <div id="sim-recommendation" style="font-size: 0.8125rem; color: var(--text-main); line-height: 1.5; background: var(--card-hover); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--card-border);">
+                Safe to execute: Planned workload comfortably fits within active 5-hour rolling capacity with zero credit deduction or throttling risk.
+              </div>
+            </div>
+
+            <!-- 4 Metric KPI Cards -->
+            <div class="sim-kpi-grid">
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">5-Hour Burst Load</div>
+                <div class="sim-kpi-val" id="sim-kpi-burst-val">$5.16 / $20.00</div>
+                <div class="sim-kpi-sub" id="sim-kpi-burst-sub">25.8% consumed • Safe</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">Weekly Runway Impact</div>
+                <div class="sim-kpi-val" id="sim-kpi-weekly-val">+4.0% load</div>
+                <div class="sim-kpi-sub" id="sim-kpi-weekly-sub">$5.16 of $129.00 weekly</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">Imputed Developer Value</div>
+                <div class="sim-kpi-val" id="sim-kpi-cost-val">£4.08</div>
+                <div class="sim-kpi-sub" id="sim-kpi-cost-sub">$5.16 API value (Covered)</div>
+              </div>
+
+              <div class="sim-kpi-card">
+                <div class="sim-kpi-label">Rate Limit &amp; Credit Risk</div>
+                <div class="sim-kpi-val" id="sim-kpi-risk-val" style="color: var(--accent-green);">0 Credits</div>
+                <div class="sim-kpi-sub" id="sim-kpi-risk-sub">Zero out-of-pocket credit burn</div>
+              </div>
+            </div>
+
+            <!-- SVG Quota Trajectory Preview Card -->
+            <div class="sim-trajectory-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.8125rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-16,0V75.31L139.31,160a8,8,0,0,1-11.31,0L96,128,29.66,194.34a8,8,0,0,1-11.32-11.32l72-72a8,8,0,0,1,11.32,0L133.66,143,212.69,64H184a8,8,0,0,1,0-16h48A8,8,0,0,1,240,56Z"/></svg>
+                  Turn-by-Turn Headroom Trajectory
+                </span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="sim-trajectory-legend">• Headroom vs 100% Burst Boundary</span>
+              </div>
+              <div style="width: 100%; height: 160px;">
+                <svg id="sim-trajectory-svg" viewBox="0 0 500 160" style="width: 100%; height: 100%; overflow: visible;">
+                  <title>Simulated Token Trajectory Chart</title>
+                  <!-- Trajectory chart dynamically rendered by JS -->
+                </svg>
+              </div>
+            </div>
+
+            <!-- Plan Tier Sensitivity Comparison Table -->
+            <div class="sim-trajectory-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.8125rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.9,134.19l-32-80a8,8,0,0,0-7.42-5.03H136V32a8,8,0,0,0-16,0V49.16H55.52a8,8,0,0,0-7.42,5.03l-32,80a8,8,0,0,0,2.15,8.87l32,28a8,8,0,0,0,10.5-.32l29.41-26.47A8,8,0,0,0,91.82,138,55.93,55.93,0,0,0,120,157.65V208H88a8,8,0,0,0,0,16h80a8,8,0,0,0,0-16H136V157.65a55.93,55.93,0,0,0,28.18-19.65,8,8,0,0,0,1.66,6.29L195.25,170.76a8,8,0,0,0,10.5.32l32-28A8,8,0,0,0,239.9,134.19ZM48.65,137.49,30.34,121.47l23.51-58.77h36.3l23.51,58.77-18.31,16-23.35-21a8,8,0,0,0-10.7,0ZM180.75,137.49l-18.31-16,23.51-58.77h36.3l23.51,58.77-18.31,16-23.35-21a8,8,0,0,0-10.7,0Z"/></svg>
+                  Subscription Tier Headroom Comparison
+                </span>
+                <span class="code-pill">Same Workload Across Tiers</span>
+              </div>
+              <div id="sim-tier-comparison" class="table-scroll-container">
+                <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Simulation Tier Pricing and Token Allocations (scrollable table)">
+                  <table class="sim-tier-table">
+                    <caption class="sr-only">Simulation Tier Pricing and Token Allocations</caption>
+                    <thead>
+                      <tr>
+                        <th>Tier Profile</th>
+                        <th>5h Capacity</th>
+                        <th>Burst Used</th>
+                        <th>Status</th>
+                        <th>Exhaustion Turn</th>
+                        <th>Credit Usage</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sim-tier-tbody">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="table-scroll-fade" aria-hidden="true"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Profile & Promotion Manager Section -->
+      <div class="section-card" id="plan-manager-card" style="margin-top: 24px;">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Plan Profiles, Overlays &amp; Rate Cards</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px;">
+              Manage active subscription tiers, register capacity promotions, and inspect model rate cards
+            </p>
+          </div>
+        </div>
+
+        <!-- Plan Sub-Tabs -->
+        <div class="modal-tabs" style="margin-bottom: 16px;">
+          <button class="modal-tab-btn active" id="modal-tab-plan" data-modaltab="plan">Active Plan &amp; Switcher</button>
+          <button class="modal-tab-btn" id="modal-tab-promos" data-modaltab="promos">Capacity Promotions &amp; Overlays</button>
+          <button class="modal-tab-btn" id="modal-tab-rates" data-modaltab="rates">Rate Cards &amp; Availability</button>
+          <button class="modal-tab-btn" id="modal-tab-json" data-modaltab="json">JSON Config Sync</button>
+        </div>
+
+        <div class="modal-body" role="region" tabindex="0" aria-label="Plan Profile Modal Content (scrollable)" style="padding: 0;">
+          <!-- View 1: Active Plan & Switcher -->
+        <div id="modal-view-plan" class="modal-tab-content">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <!-- Active Plan Summary Box -->
+            <div style="background: var(--quota-bg); border: 1px solid var(--quota-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
+                Current Active Plan
+              </div>
+              <div id="modal-active-plan-name" style="font-size: 1.0625rem; font-weight: 700; color: var(--text-main);">
+                Google One AI Premium (Antigravity Pro)
+              </div>
+              <div id="modal-active-plan-prices" style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; font-family: monospace;">
+                £18.99 / $19.99 per month • Renews day 24
+              </div>
+              <div style="margin-top: 12px; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                  <span style="color: var(--text-muted); white-space: nowrap;">Gemini 5h / Weekly:</span>
+                  <span id="modal-active-gemini-cap" style="font-weight: 600; color: var(--text-main); font-family: monospace; white-space: nowrap;">$20.00 / $129.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                  <span style="color: var(--text-muted); white-space: nowrap;">Claude 5h / Weekly:</span>
+                  <span id="modal-active-claude-cap" style="font-weight: 600; color: var(--text-main); font-family: monospace; white-space: nowrap;">$10.00 / $35.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Switch Plan Form -->
+            <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px;">
+              <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">
+                Switch / Schedule Plan Tier Change
+              </div>
+              <div class="form-group">
+                <label for="plan-tier-select">Select Plan Profile Preset</label>
+                <select id="plan-tier-select" class="form-control">
+                  <option value="free">Free Tier (Personal Google Account) — £0.00/mo</option>
+                  <option value="plus_2tb">Google AI Plus (2 TB) — £7.99/mo</option>
+                  <option value="pro">Google AI Pro (2 TB) — £18.99/mo</option>
+                  <option value="pro_5tb">Google AI Pro (5 TB) — £29.99/mo</option>
+                  <option value="pro_10tb">Google AI Pro (10 TB) — £39.99/mo</option>
+                  <option value="ultra_5x">Google AI Ultra (20 TB - 5x AI Usage) — £79.99/mo</option>
+                  <option value="ultra_20x">Google AI Ultra (30 TB - 20x AI Usage) — £189.99/mo</option>
+                  <option value="enterprise_5x" style="display: none;">Google AI Ultra (20 TB - 5x AI Usage) — £79.99/mo</option>
+                  <option value="ultra_10x" style="display: none;">Google AI Ultra Max (10x Quota) — £99.99/mo</option>
+                  <option value="custom">Custom Capacity Plan...</option>
+                </select>
+              </div>
+              <!-- Dynamic Custom Plan Inputs -->
+              <div id="plan-custom-fields" style="margin-bottom: 12px; padding: 12px; background: var(--quota-bg); border-radius: 8px; border: 1px solid var(--card-border);">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Custom Plan Parameters</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-fee-gbp" style="font-size: 0.75rem;">Monthly Fee (£)</label>
+                    <input type="number" id="custom-fee-gbp" class="form-control" step="0.01" min="0" value="0.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-fee-usd" style="font-size: 0.75rem;">Monthly Fee ($)</label>
+                    <input type="number" id="custom-fee-usd" class="form-control" step="0.01" min="0" value="0.00" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-gemini-5h" style="font-size: 0.75rem;">Gemini 5h Limit ($)</label>
+                    <input type="number" id="custom-gemini-5h" class="form-control" step="1.0" min="1" value="20.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-gemini-weekly" style="font-size: 0.75rem;">Gemini Weekly ($)</label>
+                    <input type="number" id="custom-gemini-weekly" class="form-control" step="1.0" min="1" value="129.00" />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-claude-5h" style="font-size: 0.75rem;">Claude 5h Limit ($)</label>
+                    <input type="number" id="custom-claude-5h" class="form-control" step="1.0" min="0" value="10.00" />
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="custom-claude-weekly" style="font-size: 0.75rem;">Claude Weekly ($)</label>
+                    <input type="number" id="custom-claude-weekly" class="form-control" step="1.0" min="0" value="35.00" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="plan-effective-date">Effective From Date (UTC)</label>
+                <input type="date" id="plan-effective-date" class="form-control" />
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+                <button id="btn-save-plan" class="btn-primary">Apply Plan Profile</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscription History Timeline -->
+          <div>
+            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+              Plan History &amp; Historical Provenance Intervals
+            </div>
+            <div class="table-scroll-container">
+              <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Plan History and Provenance Intervals (scrollable table)">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                  <caption class="sr-only">Plan History and Provenance Intervals</caption>
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--card-border); text-align: left; color: var(--text-muted);">
+                      <th style="padding: 8px;">Tier</th>
+                      <th style="padding: 8px;">Plan Name</th>
+                      <th style="padding: 8px;">Effective From</th>
+                      <th style="padding: 8px;">Effective To</th>
+                      <th style="padding: 8px;">Monthly Fee</th>
+                      <th style="padding: 8px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="plan-history-tbody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-scroll-fade" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 2: Capacity Promotions -->
+        <div id="modal-view-promos" class="modal-tab-content" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); text-transform: uppercase;">Active &amp; Scheduled Capacity Overlays</span>
+            </div>
+            <div id="promotions-list">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Register Promotion Form -->
+          <div style="background: var(--quota-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; margin-top: 16px;">
+            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; text-transform: uppercase;">
+              Register New Capacity Promotion
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+              <div class="form-group">
+                <label for="promo-name-input">Promotion Name</label>
+                <input type="text" id="promo-name-input" class="form-control" placeholder="e.g. Summer 2x Boost" />
+              </div>
+              <div class="form-group">
+                <label for="promo-provider-select">Target Provider</label>
+                <select id="promo-provider-select" class="form-control">
+                  <option value="gemini">Gemini Models</option>
+                  <option value="claude_gpt">Claude &amp; GPT Models</option>
+                  <option value="all">All Providers</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="promo-multiplier-input">Capacity Multiplier</label>
+                <input type="number" id="promo-multiplier-input" class="form-control" step="0.1" min="1.0" max="10.0" value="2.0" />
+              </div>
+              <div class="form-group">
+                <label for="promo-from-input">Valid From</label>
+                <input type="date" id="promo-from-input" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="promo-to-input">Valid To</label>
+                <input type="date" id="promo-to-input" class="form-control" />
+              </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+              <button id="btn-add-promo" class="btn-primary">Register Promotion</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 3: Model Rate Cards & Availability -->
+        <div id="modal-view-rates" class="modal-tab-content" style="display: none;">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase;">
+            Model Pricing Rate Revisions &amp; Availability Lifecycle
+          </div>
+          <div class="table-scroll-container">
+            <div class="table-scroll-wrapper" role="region" tabindex="0" aria-label="Exchange Rate History and Overrides (scrollable table)" style="max-height: 400px; overflow-y: auto;">
+              <table id="rate-history-table" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                <caption class="sr-only">Exchange Rate History and Overrides</caption>
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--card-border); text-align: left; color: var(--text-muted);">
+                    <th style="padding: 8px;">Model ID</th>
+                    <th style="padding: 8px;">Model Name &amp; Reasoning</th>
+                    <th style="padding: 8px;">Status</th>
+                    <th style="padding: 8px;">Effective Interval</th>
+                    <th style="padding: 8px;">Prompt Uncached</th>
+                    <th style="padding: 8px;">Prompt Cached</th>
+                    <th style="padding: 8px;">Output</th>
+                  </tr>
+                </thead>
+                <tbody id="rate-history-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+            <div class="table-scroll-fade" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <!-- View 4: JSON Config Sync -->
+        <div id="modal-view-json" class="modal-tab-content" style="display: none;">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase;">
+            Live JSON Configuration (pricing.json)
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
+            Copy or download this JSON configuration to persist any plan adjustments or newly registered promotions into <code>config/pricing.json</code>.
+          </p>
+          <textarea id="modal-json-editor" class="form-control" style="height: 250px; font-family: monospace; font-size: 0.75rem; white-space: pre;" readonly></textarea>
+          <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+            <button id="btn-copy-json" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg> Copy to Clipboard</button>
+            <button id="btn-download-json" class="btn-primary" style="display: inline-flex; align-items: center; gap: 6px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,8.34a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,126.69V32a8,8,0,0,0-16,0v94.69L93.66,101.02A8,8,0,0,0,82.34,112.34Z"/></svg> Download pricing.json</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div> <!-- /view-plan -->
+      </div> <!-- /.container -->
+    </div> <!-- /#app-main-viewport -->
+
+    <!-- 3. MOBILE BOTTOM NAVIGATION DOCK (<768px) -->
+    <nav id="mobile-bottom-nav" class="mobile-bottom-nav mob-bottom-nav" role="tablist" aria-label="Mobile Navigation">
+      <button class="mob-nav-item mob-nav-btn active" id="mob-tab-now" data-action="switch-tab" data-tab="tab-now" role="tab" aria-selected="true" aria-controls="view-now">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm45.66-125.66-40,24a8,8,0,0,0-3.52,4.8l-12,40a8,8,0,0,0,10.18,9.86l40-16a8,8,0,0,0,4.8-3.52l24-40A8,8,0,0,0,173.66,90.34Zm-28.52,38.16L130,134.56l6.06-15.14,15.14-6.06Z"/></svg>
+        <span>Now</span>
+      </button>
+      <button class="mob-nav-item mob-nav-btn" id="mob-tab-sessions" data-action="switch-tab" data-tab="tab-sessions" role="tab" aria-selected="false" aria-controls="view-sessions">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm44-12a12,12,0,1,0,12,12A12,12,0,0,0,184,116ZM72,116a12,12,0,1,0,12,12A12,12,0,0,0,72,116Zm160,12A104,104,0,0,1,79.2,221.78L41.34,233.4a16,16,0,0,1-20.08-20.08l11.62-37.86A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,168.32a8,8,0,0,1,.84,6.47l-9.76,31.79,31.79-9.76a8,8,0,0,1,6.47.84A88,88,0,0,0,216,128Z"/></svg>
+        <span>Sessions</span>
+      </button>
+      <button class="mob-nav-item mob-nav-btn" id="mob-tab-projects" data-action="switch-tab" data-tab="tab-projects" role="tab" aria-selected="false" aria-controls="view-projects">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M208,64a32,32,0,1,0-44.59,29.47A64.12,64.12,0,0,0,104,147.25V93.47A32,32,0,1,0,88,64a32.14,32.14,0,0,0,1.27,9A32,32,0,0,0,88,80v96a32,32,0,1,0,24.73-31.18A48.14,48.14,0,0,1,152,99.64V128a32,32,0,1,0,16,0V88a48.09,48.09,0,0,1,20.73-39.18A32,32,0,0,0,208,64ZM80,64a16,16,0,1,1,16,16A16,16,0,0,1,80,64Zm24,128a16,16,0,1,1-16-16A16,16,0,0,1,104,192Zm72-48a16,16,0,1,1-16-16A16,16,0,0,1,176,144Zm16-80a16,16,0,1,1-16-16A16,16,0,0,1,192,64Z"/></svg>
+        <span>Projects</span>
+      </button>
+      <button class="mob-nav-item mob-nav-btn" id="mob-tab-swarms" data-action="switch-tab" data-tab="tab-swarms" role="tab" aria-selected="false" aria-controls="view-swarms">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M224,168a24,24,0,0,0-17.76,8.24l-38.64-27.6A40,40,0,0,0,176,128a39.69,39.69,0,0,0-6.19-21.2l36.43-31.87A24,24,0,1,0,195.44,61.4L159,93.28A40,40,0,0,0,136,88.9V48h8a8,8,0,0,0,0-16H112a8,8,0,0,0,0,16h8V88.9a40,40,0,0,0-23,4.38L60.56,61.4A24,24,0,1,0,50.19,74.93L86.62,106.8A39.69,39.69,0,0,0,80.43,128a40,40,0,0,0,8.41,20.64l-38.64,27.6A24,24,0,1,0,60,192a23.86,23.86,0,0,0-1.76-9l37.2-26.57a40,40,0,0,0,65.12,0l37.2,26.57A23.86,23.86,0,0,0,196,192a24,24,0,1,0,28-24ZM48,80a8,8,0,1,1,8-8A8,8,0,0,1,48,80ZM40,200a8,8,0,1,1,8-8A8,8,0,0,1,40,200ZM208,64a8,8,0,1,1-8,8A8,8,0,0,1,208,64Zm8,136a8,8,0,1,1,8-8A8,8,0,0,1,216,200ZM128,152a24,24,0,1,1,24-24A24,24,0,0,1,128,152Z"/></svg>
+        <span>Swarms</span>
+      </button>
+      <button class="mob-nav-item mob-nav-btn" id="mob-tab-billing" data-action="switch-tab" data-tab="tab-billing" role="tab" aria-selected="false" aria-controls="view-billing">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H216V88H40ZM216,200H40V136H216v64Zm-32-36a8,8,0,0,1-8,8H128a8,8,0,0,1,0-16h48A8,8,0,0,1,184,164Z"/></svg>
+        <span>Billing</span>
+      </button>
+      <button class="mob-nav-item mob-nav-btn" id="mob-tab-plan" data-action="switch-tab" data-tab="tab-plan" role="tab" aria-selected="false" aria-controls="view-plan">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M40,88H74.34a36,36,0,0,0,67.32,0H216a8,8,0,0,0,0-16H141.66a36,36,0,0,0-67.32,0H40a8,8,0,0,0,0,16Zm68-20A20,20,0,1,1,88,88,20,20,0,0,1,108,68ZM216,168H181.66a36,36,0,0,0-67.32,0H40a8,8,0,0,0,0,16h74.34a36,36,0,0,0,67.32,0H216a8,8,0,0,0,0-16Zm-68,20a20,20,0,1,1,20-20A20,20,0,0,1,148,188Z"/></svg>
+        <span>Plan</span>
+      </button>
+    </nav>
+
+    <!-- 4. SLIDE-OVER INSPECTOR DRAWER -->
+    <div id="drawer-backdrop" class="drawer-backdrop" data-action="close-inspector-drawer"></div>
+    <aside id="desktop-inspector-drawer" class="inspector-drawer" aria-label="Inspector Drawer">
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-title" id="drawer-heading">Turn-by-Turn Telemetry Inspection</div>
+          <div class="drawer-sub" id="drawer-subheading">Step-level breakdown and token decomposition</div>
+        </div>
+        <button class="drawer-close-btn tactile-press" data-action="close-inspector-drawer" title="Close (Esc)"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
+      </div>
+      <div id="drawer-body" class="drawer-body" role="region" tabindex="0" aria-label="Desktop Inspector Details (scrollable)">
+        <!-- Injected dynamic inspection content -->
+    </aside>
+
+    <!-- 5. UNIVERSAL FLOATING HTML GLASS TOOLTIP -->
+    <div id="app-micro-tooltip" class="app-micro-tooltip" style="display: none;"></div>
+  </div> <!-- /#app-layout-container -->
+
+<!-- CANONICAL DATA HOOK (INJECTED BY EXPORTER) -->
+  <script id="injected-dashboard-data" type="application/json">{}</script>
+
+  <script src="js/core-utils.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/now-burst.js"></script>
+  <script src="js/now.js"></script>
+  <script src="js/sessions-filters.js"></script>
+  <script src="js/sessions-tree.js"></script>
+  <script src="js/sessions.js"></script>
+  <script src="js/sessions-turns.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/skills.js"></script>
+  <script src="js/swarms.js"></script>
+  <script src="js/billing.js"></script>
+  <script src="js/plan-rates.js"></script>
+  <script src="js/plan-manager.js"></script>
+  <script src="js/simulator.js"></script>
+</body>
+</html>

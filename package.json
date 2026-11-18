@@ -1,0 +1,17 @@
+{
+  "name": "antigravity-token-dashboard",
+  "version": "2.27.0",
+  "description": "Antigravity Token Consumption, Context Caching, and API Cost Benchmarking Dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.42.1"
+  }
+}

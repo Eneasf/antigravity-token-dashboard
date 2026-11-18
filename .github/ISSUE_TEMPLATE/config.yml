@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Community Discussions & Q&A
+    url: https://github.com/Eneasf/antigravity-token-dashboard/discussions
+    about: Ask questions, share prompt cache optimization tips, or propose ideas.
+  - name: Security Vulnerability
+    url: https://github.com/Eneasf/antigravity-token-dashboard/security/advisories/new
+    about: Please report security vulnerabilities privately via GitHub Security Advisories.
+  - name: Google One Billing & Account Support
+    url: https://support.google.com/googleone
+    about: For credit refunds, subscription renewals, or account questions, please contact official Google One Support.

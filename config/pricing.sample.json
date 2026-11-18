@@ -1,0 +1,1222 @@
+{
+  "_comment": "Antigravity Token Dashboard: Sample Pricing & Plan Configuration. Copy this file to config/pricing.json to calibrate your local installation.",
+  "schema_version": 2,
+  "subscription": {
+    "tier": "pro",
+    "name": "Google One AI Premium (Antigravity Pro)",
+    "monthly_price_gbp": 18.99,
+    "monthly_price_usd": 19.99,
+    "renewal_day": 24,
+    "use_ai_credits": false,
+    "cents_per_credit": 1.0,
+    "windows": {
+      "burst_hours": 5,
+      "weekly_hours": 168
+    },
+    "quota_limits": {
+      "burst_5h_tokens": 168000000,
+      "gemini_5h_capacity_usd": 20.0,
+      "gemini_weekly_capacity_usd": 129.0,
+      "claude_5h_capacity_usd": 10.0,
+      "claude_weekly_capacity_usd": 35.0
+    }
+  },
+  "currency": {
+    "default": "GBP",
+    "supported": [
+      "GBP",
+      "USD",
+      "EUR"
+    ],
+    "usd_to_gbp_fx_rate": 0.79,
+    "credit_pack": {
+      "description": "Prepaid AI credits add-on bank with automatic reload at exhaustion",
+      "credits": 2500,
+      "pack_size": 2500,
+      "auto_reload": true,
+      "price_gbp": 23.99,
+      "price_usd": 25.0,
+      "pence_per_credit": 0.9596,
+      "cents_per_credit": 1.0,
+      "cost_per_credit_gbp": 0.009596,
+      "cost_per_credit_usd": 0.01,
+      "is_prepaid_overage_pool": true
+    }
+  },
+  "quota_tracks": [
+    {
+      "id": "gemini",
+      "name": "Gemini Models",
+      "display_name": "Gemini Models",
+      "short_name": "Gemini",
+      "silo_subtitle": "Carbon • Orchestrator • Hydrogen • Argon • Flash 3.8",
+      "badge_text": "Included in plan",
+      "badge_color": "green",
+      "icon": "sparkles",
+      "is_primary": true,
+      "credit_spillover": true,
+      "rpc_bucket_patterns": [
+        "gemini"
+      ],
+      "windows": [
+        "5h",
+        "weekly"
+      ],
+      "capacity_keys": {
+        "5h": "gemini_5h_capacity_usd",
+        "five_hour": "gemini_5h_capacity_usd",
+        "weekly": "gemini_weekly_capacity_usd"
+      }
+    },
+    {
+      "id": "claude_gpt",
+      "name": "Claude and GPT Models",
+      "display_name": "Claude and GPT Models",
+      "short_name": "Claude & GPT",
+      "silo_subtitle": "Opus 5.5 • Sonnet 5.5 • GPT-OSS 120B",
+      "badge_text": "Separate allowance, hard stop",
+      "badge_color": "amber",
+      "icon": "sparkle",
+      "is_primary": false,
+      "credit_spillover": false,
+      "rpc_bucket_patterns": [
+        "claude",
+        "gpt",
+        "3p"
+      ],
+      "windows": [
+        "5h",
+        "weekly"
+      ],
+      "capacity_keys": {
+        "5h": "claude_5h_capacity_usd",
+        "five_hour": "claude_5h_capacity_usd",
+        "weekly": "claude_weekly_capacity_usd"
+      }
+    }
+  ],
+  "plan_tiers": {
+    "free": {
+      "tier": "free",
+      "name": "Free Tier (Personal Google Account)",
+      "short_label": "Free Tier",
+      "badge_label": "Free",
+      "multiplier_label": "0.25x",
+      "monthly_price_gbp": 0.0,
+      "monthly_price_usd": 0.0,
+      "renewal_day": 1,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 40000000,
+        "gemini_5h_capacity_usd": 5.0,
+        "gemini_weekly_capacity_usd": 25.0,
+        "claude_5h_capacity_usd": 0.0,
+        "claude_weekly_capacity_usd": 0.0
+      }
+    },
+    "plus_2tb": {
+      "tier": "plus_2tb",
+      "name": "Google AI Plus (2 TB)",
+      "short_label": "AI Plus (2 TB)",
+      "badge_label": "Plus",
+      "multiplier_label": "0.5x",
+      "monthly_price_gbp": 7.99,
+      "monthly_price_usd": 9.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 80000000,
+        "gemini_5h_capacity_usd": 10.0,
+        "gemini_weekly_capacity_usd": 65.0,
+        "claude_5h_capacity_usd": 0.0,
+        "claude_weekly_capacity_usd": 0.0
+      }
+    },
+    "pro": {
+      "tier": "pro",
+      "name": "Google AI Pro (2 TB)",
+      "short_label": "Pro (1×)",
+      "badge_label": "Pro",
+      "multiplier_label": "1x",
+      "monthly_price_gbp": 18.99,
+      "monthly_price_usd": 19.99,
+      "renewal_day": 24,
+      "weekly_reset_day": "Thursday",
+      "weekly_reset_time_utc": "18:00:00",
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 168000000,
+        "gemini_5h_capacity_usd": 20.0,
+        "gemini_weekly_capacity_usd": 129.0,
+        "claude_5h_capacity_usd": 10.0,
+        "claude_weekly_capacity_usd": 35.0
+      }
+    },
+    "pro_5tb": {
+      "tier": "pro_5tb",
+      "name": "Google AI Pro (5 TB)",
+      "short_label": "Pro (5 TB)",
+      "badge_label": "Pro 5TB",
+      "multiplier_label": "1x",
+      "monthly_price_gbp": 29.99,
+      "monthly_price_usd": 34.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": false,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 168000000,
+        "gemini_5h_capacity_usd": 20.0,
+        "gemini_weekly_capacity_usd": 129.0,
+        "claude_5h_capacity_usd": 10.0,
+        "claude_weekly_capacity_usd": 35.0
+      }
+    },
+    "pro_10tb": {
+      "tier": "pro_10tb",
+      "name": "Google AI Pro (10 TB)",
+      "short_label": "Pro (10 TB)",
+      "badge_label": "Pro 10TB",
+      "multiplier_label": "1x",
+      "monthly_price_gbp": 39.99,
+      "monthly_price_usd": 49.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": false,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 168000000,
+        "gemini_5h_capacity_usd": 20.0,
+        "gemini_weekly_capacity_usd": 129.0,
+        "claude_5h_capacity_usd": 10.0,
+        "claude_weekly_capacity_usd": 35.0
+      }
+    },
+    "ultra_5x": {
+      "tier": "ultra_5x",
+      "aliases": [
+        "enterprise_5x",
+        "ultra"
+      ],
+      "name": "Google AI Ultra (20 TB - 5x AI Usage)",
+      "short_label": "Ultra (5×)",
+      "badge_label": "Ultra 5x",
+      "multiplier_label": "5x",
+      "monthly_price_gbp": 79.99,
+      "monthly_price_usd": 99.99,
+      "renewal_day": 13,
+      "weekly_reset_day": "Sunday",
+      "weekly_reset_time_utc": "17:58:04",
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 840000000,
+        "gemini_5h_capacity_usd": 25.0,
+        "gemini_weekly_capacity_usd": 100.0,
+        "claude_5h_capacity_usd": 50.0,
+        "claude_weekly_capacity_usd": 175.0
+      }
+    },
+    "enterprise_5x": {
+      "tier": "enterprise_5x",
+      "name": "Google AI Ultra / Enterprise 5x",
+      "short_label": "Enterprise (5×)",
+      "badge_label": "Enterprise 5x",
+      "multiplier_label": "5x",
+      "monthly_price_gbp": 79.99,
+      "monthly_price_usd": 99.99,
+      "renewal_day": 13,
+      "weekly_reset_day": "Sunday",
+      "weekly_reset_time_utc": "17:58:04",
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": false,
+      "show_in_switcher": false,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 840000000,
+        "gemini_5h_capacity_usd": 25.0,
+        "gemini_weekly_capacity_usd": 100.0,
+        "claude_5h_capacity_usd": 50.0,
+        "claude_weekly_capacity_usd": 175.0
+      }
+    },
+    "ultra_10x": {
+      "tier": "ultra_10x",
+      "name": "Antigravity Ultra (10x Capacity)",
+      "short_label": "Ultra (10×)",
+      "badge_label": "Ultra 10x",
+      "multiplier_label": "10x",
+      "monthly_price_gbp": 99.99,
+      "monthly_price_usd": 119.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 1680000000,
+        "gemini_5h_capacity_usd": 200.0,
+        "gemini_weekly_capacity_usd": 1290.0,
+        "claude_5h_capacity_usd": 100.0,
+        "claude_weekly_capacity_usd": 350.0
+      }
+    },
+    "ultra_20x": {
+      "tier": "ultra_20x",
+      "aliases": [
+        "ultra_30tb",
+        "ultra_max"
+      ],
+      "name": "Google AI Ultra (30 TB - 20x AI Usage)",
+      "short_label": "Ultra (20×)",
+      "badge_label": "Ultra 20x",
+      "multiplier_label": "20x",
+      "monthly_price_gbp": 189.99,
+      "monthly_price_usd": 239.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 3360000000,
+        "gemini_5h_capacity_usd": 400.0,
+        "gemini_weekly_capacity_usd": 2580.0,
+        "claude_5h_capacity_usd": 200.0,
+        "claude_weekly_capacity_usd": 700.0
+      }
+    },
+    "custom": {
+      "tier": "custom",
+      "name": "Custom Capacity Plan",
+      "short_label": "Custom",
+      "badge_label": "Custom",
+      "multiplier_label": "Custom",
+      "monthly_price_gbp": 0.0,
+      "monthly_price_usd": 0.0,
+      "renewal_day": 1,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "show_in_simulator": true,
+      "show_in_switcher": true,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 200000000,
+        "gemini_5h_capacity_usd": 25.0,
+        "gemini_weekly_capacity_usd": 150.0,
+        "claude_5h_capacity_usd": 15.0,
+        "claude_weekly_capacity_usd": 50.0
+      }
+    }
+  },
+  "simulator_archetypes": [
+    {
+      "id": "hydrogen_xhigh_sprint",
+      "name": "Hydrogen XHigh Sprint",
+      "model_id": "1528",
+      "turn_count": 30,
+      "prompt_tokens": 110000,
+      "cache_hit_ratio_pct": 93.0,
+      "thinking_tokens": 900,
+      "answer_tokens": 450,
+      "duration_minutes_per_turn": 1.5,
+      "pace_minutes": 1.5,
+      "description": "High-efficiency Gemini 4 Hydrogen (XHigh) coding sprint across warm 1M context at 1/6x quota burn weight."
+    },
+    {
+      "id": "deep_refactor_swarm",
+      "name": "Deep Refactor Swarm",
+      "model_id": "1427",
+      "turn_count": 40,
+      "prompt_tokens": 120000,
+      "cache_hit_ratio_pct": 88.0,
+      "thinking_tokens": 8000,
+      "answer_tokens": 1500,
+      "duration_minutes_per_turn": 2.5,
+      "pace_minutes": 2.5,
+      "description": "Multi-agent deep architecture refactor using Gemini 4 Carbon High reasoning."
+    },
+    {
+      "id": "codebase_audit",
+      "aliases": [
+        "daily_coding"
+      ],
+      "name": "Codebase Audit & Security Scan",
+      "model_id": "1318",
+      "turn_count": 60,
+      "prompt_tokens": 200000,
+      "cache_hit_ratio_pct": 94.0,
+      "thinking_tokens": 2500,
+      "answer_tokens": 1000,
+      "duration_minutes_per_turn": 1.5,
+      "pace_minutes": 1.5,
+      "description": "High-context whole-codebase scan with deep prompt caching on Gemini 3.8 Flash High."
+    },
+    {
+      "id": "rapid_prototyping_burst",
+      "aliases": [
+        "frontend_iteration"
+      ],
+      "name": "Rapid Prototyping Burst",
+      "model_id": "1418",
+      "turn_count": 25,
+      "prompt_tokens": 45000,
+      "cache_hit_ratio_pct": 75.0,
+      "thinking_tokens": 1500,
+      "answer_tokens": 800,
+      "duration_minutes_per_turn": 1.0,
+      "pace_minutes": 1.0,
+      "description": "Interactive fast-iteration development cycle with Gemini 4 Argon Medium."
+    },
+    {
+      "id": "claude_opus_deep_dive",
+      "name": "Claude Opus 5.5 Stress Test",
+      "model_id": "1402",
+      "turn_count": 35,
+      "prompt_tokens": 95000,
+      "cache_hit_ratio_pct": 92.0,
+      "thinking_tokens": 6000,
+      "answer_tokens": 1200,
+      "duration_minutes_per_turn": 2.0,
+      "pace_minutes": 2.0,
+      "description": "Tests Claude rate limits and the strict 30-95 turn boundary on Claude Opus 5.5 High."
+    },
+    {
+      "id": "subagent_fleet",
+      "name": "Subagent Fleet (Lite/Fast)",
+      "model_id": "1198",
+      "turn_count": 100,
+      "prompt_tokens": 30000,
+      "cache_hit_ratio_pct": 85.0,
+      "thinking_tokens": 500,
+      "answer_tokens": 600,
+      "duration_minutes_per_turn": 0.5,
+      "pace_minutes": 0.5,
+      "description": "Parallel background subagent workers executing mechanical tasks on Gemini Flash Lite Gen 2."
+    }
+  ],
+  "models": {
+    "1427": {
+      "name": "Gemini 4 Carbon (High)",
+      "family": "gemini-carbon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1437": {
+      "name": "Gemini 4 Carbon (Medium)",
+      "family": "gemini-carbon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1438": {
+      "name": "Gemini 4 Carbon (Low)",
+      "family": "gemini-carbon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1417": {
+      "name": "Gemini 4 Argon (High)",
+      "family": "gemini-argon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1418": {
+      "name": "Gemini 4 Argon (Medium)",
+      "family": "gemini-argon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1419": {
+      "name": "Gemini 4 Argon (Low)",
+      "family": "gemini-argon",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1667": {
+      "name": "Orchestrator (Carbon)",
+      "family": "gemini-orchestrator",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1681": {
+      "name": "Orchestrator (Argon)",
+      "family": "gemini-orchestrator",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.1,
+        "candidate_output": 10.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 1.0,
+        "prompt_cached": 0.05,
+        "candidate_output": 5.0
+      }
+    },
+    "1669": {
+      "name": "Orchestrator Executor (Hydrogen)",
+      "family": "gemini-orchestrator",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.5,
+        "prompt_cached": 0.075,
+        "candidate_output": 7.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.0125,
+        "candidate_output": 1.25
+      }
+    },
+    "1528": {
+      "name": "Gemini 4 Hydrogen (XHigh)",
+      "family": "gemini-hydrogen",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.5,
+        "prompt_cached": 0.075,
+        "candidate_output": 7.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.0125,
+        "candidate_output": 1.25
+      }
+    },
+    "1525": {
+      "name": "Gemini 4 Hydrogen (High)",
+      "family": "gemini-hydrogen",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.5,
+        "prompt_cached": 0.075,
+        "candidate_output": 7.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.0125,
+        "candidate_output": 1.25
+      }
+    },
+    "1526": {
+      "name": "Gemini 4 Hydrogen (Medium)",
+      "family": "gemini-hydrogen",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.5,
+        "prompt_cached": 0.075,
+        "candidate_output": 7.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.0125,
+        "candidate_output": 1.25
+      }
+    },
+    "1527": {
+      "name": "Gemini 4 Hydrogen (Low)",
+      "family": "gemini-hydrogen",
+      "credits_per_turn": 5.0,
+      "rates_per_million": {
+        "prompt_uncached": 1.5,
+        "prompt_cached": 0.075,
+        "candidate_output": 7.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.0125,
+        "candidate_output": 1.25
+      }
+    },
+    "1318": {
+      "name": "Gemini 3.8 Flash (High)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.501672,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1319": {
+      "name": "Gemini 3.8 Flash (Medium)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1320": {
+      "name": "Gemini 3.8 Flash (Low)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1298": {
+      "name": "Gemini 3.7 Flash (High)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1299": {
+      "name": "Gemini 3.7 Flash (Medium)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1300": {
+      "name": "Gemini 3.7 Flash (Low)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1071": {
+      "name": "Gemini 3.6 Flash (High)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1072": {
+      "name": "Gemini 3.6 Flash (Medium)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1073": {
+      "name": "Gemini 3.6 Flash (Low)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    },
+    "1016": {
+      "name": "Gemini 3.1 Pro (High)",
+      "family": "gemini-pro",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.2,
+        "candidate_output": 12.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.2,
+        "candidate_output": 12.0
+      }
+    },
+    "1036": {
+      "name": "Gemini 3.1 Pro (Low)",
+      "family": "gemini-pro",
+      "credits_per_turn": 15.0,
+      "rates_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.2,
+        "candidate_output": 12.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 2.0,
+        "prompt_cached": 0.2,
+        "candidate_output": 12.0
+      }
+    },
+    "1198": {
+      "name": "Gemini Flash Lite Gen 2 (Adaptive Thinking)",
+      "family": "gemini-flash-lite",
+      "credits_per_turn": 0.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.025,
+        "candidate_output": 1.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1050": {
+      "name": "Gemini Flash Lite (Subagent)",
+      "family": "gemini-flash-lite",
+      "credits_per_turn": 0.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.025,
+        "candidate_output": 1.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1322": {
+      "name": "Gemini Fast Agent Assistant",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1020": {
+      "name": "Gemini Search Agent",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1301": {
+      "name": "Gemini Experimental Agent",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1317": {
+      "name": "Gemini Flash Lite (Legacy)",
+      "family": "gemini-flash-lite",
+      "credits_per_turn": 1.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.25,
+        "prompt_cached": 0.025,
+        "candidate_output": 1.5
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1132": {
+      "name": "Gemini Fast Agent (Legacy)",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.125,
+        "prompt_cached": 0.0125,
+        "candidate_output": 0.625
+      }
+    },
+    "1400": {
+      "name": "Claude Opus 5.5 (Low)",
+      "family": "claude-opus",
+      "credits_per_turn": 25.0,
+      "rates_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      }
+    },
+    "1401": {
+      "name": "Claude Opus 5.5 (Medium)",
+      "family": "claude-opus",
+      "credits_per_turn": 25.0,
+      "rates_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      }
+    },
+    "1402": {
+      "name": "Claude Opus 5.5 (High)",
+      "family": "claude-opus",
+      "credits_per_turn": 25.0,
+      "rates_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      }
+    },
+    "1403": {
+      "name": "Claude Sonnet 5.5 (Low)",
+      "family": "claude-sonnet",
+      "credits_per_turn": 10.0,
+      "rates_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      }
+    },
+    "1404": {
+      "name": "Claude Sonnet 5.5 (Medium)",
+      "family": "claude-sonnet",
+      "credits_per_turn": 10.0,
+      "rates_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      }
+    },
+    "1405": {
+      "name": "Claude Sonnet 5.5 (High)",
+      "family": "claude-sonnet",
+      "credits_per_turn": 10.0,
+      "rates_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      }
+    },
+    "1035": {
+      "name": "Claude Sonnet 4.6 (Thinking)",
+      "family": "claude-sonnet",
+      "credits_per_turn": 10.0,
+      "rates_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 3.0,
+        "prompt_cached": 0.3,
+        "candidate_output": 15.0
+      }
+    },
+    "1026": {
+      "name": "Claude Opus 4.6 (Thinking)",
+      "family": "claude-opus",
+      "credits_per_turn": 25.0,
+      "rates_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 15.0,
+        "prompt_cached": 1.5,
+        "candidate_output": 75.0
+      }
+    },
+    "342": {
+      "name": "GPT-OSS 120B (Medium)",
+      "family": "gpt-oss",
+      "credits_per_turn": 2.0,
+      "rates_per_million": {
+        "prompt_uncached": 0.15,
+        "prompt_cached": 0.0,
+        "candidate_output": 0.6
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.15,
+        "prompt_cached": 0.0,
+        "candidate_output": 0.6
+      }
+    },
+    "default": {
+      "name": "Default Model",
+      "family": "gemini-flash",
+      "credits_per_turn": 2.5,
+      "rates_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      },
+      "quota_weights_per_million": {
+        "prompt_uncached": 0.75,
+        "prompt_cached": 0.075,
+        "candidate_output": 3.75
+      }
+    }
+  },
+  "subscription_history": [
+    {
+      "valid_from": "2024-01-01T00:00:00Z",
+      "valid_to": null,
+      "tier": "pro",
+      "name": "Google One AI Premium (Antigravity Pro)",
+      "monthly_price_gbp": 18.99,
+      "monthly_price_usd": 19.99,
+      "renewal_day": 24,
+      "use_ai_credits": false,
+      "cents_per_credit": 1.0,
+      "windows": {
+        "burst_hours": 5,
+        "weekly_hours": 168
+      },
+      "quota_limits": {
+        "burst_5h_tokens": 168000000,
+        "gemini_5h_capacity_usd": 20.0,
+        "gemini_weekly_capacity_usd": 129.0,
+        "claude_5h_capacity_usd": 10.0,
+        "claude_weekly_capacity_usd": 35.0
+      }
+    }
+  ],
+  "promotions": [],
+  "rate_history": {
+    "1427": [
+      {
+        "valid_from": "2026-11-10T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ],
+    "1437": [
+      {
+        "valid_from": "2026-11-10T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ],
+    "1438": [
+      {
+        "valid_from": "2026-11-10T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ],
+    "1417": [
+      {
+        "valid_from": "2026-10-13T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ],
+    "1418": [
+      {
+        "valid_from": "2026-10-13T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ],
+    "1419": [
+      {
+        "valid_from": "2026-10-13T00:00:00Z",
+        "valid_to": "2026-11-30T23:59:59Z",
+        "rates_per_million": {
+          "prompt_uncached": 2.0,
+          "prompt_cached": 0.1,
+          "candidate_output": 10.0
+        }
+      },
+      {
+        "valid_from": "2026-12-01T00:00:00Z",
+        "valid_to": null,
+        "rates_per_million": {
+          "prompt_uncached": 4.0,
+          "prompt_cached": 0.2,
+          "candidate_output": 20.0
+        }
+      }
+    ]
+  },
+  "availability": {
+    "342": {
+      "status": "deprecated",
+      "preview_from": "2025-08-01T00:00:00Z",
+      "ga_from": "2025-10-01T00:00:00Z",
+      "sunset_at": "2026-11-18T00:00:00Z"
+    }
+  }
+}

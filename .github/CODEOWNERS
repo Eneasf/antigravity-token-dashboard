@@ -1,0 +1,5 @@
+# Code Owners
+# Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default: @Eneasf is the required code reviewer for all files and directories.
+* @Eneasf

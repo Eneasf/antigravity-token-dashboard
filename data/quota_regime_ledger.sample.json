@@ -1,0 +1,44 @@
+{
+  "active_regime_id": "regime-20261017-post-reset",
+  "active_regime_since_utc": "2026-10-17T00:00:00Z",
+  "bucket_5h_usd": 25.0,
+  "bucket_weekly_usd": 100.0,
+  "expected_coupling_ratio": 4.0,
+  "calibrated_weights_per_1m": {
+    "1427": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1437": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1438": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1667": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1681": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1669": { "prompt_uncached": 0.25, "prompt_cached": 0.0125, "candidate_output": 1.25 },
+    "1417": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1418": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1419": { "prompt_uncached": 1.0, "prompt_cached": 0.05, "candidate_output": 5.0 },
+    "1528": { "prompt_uncached": 0.25, "prompt_cached": 0.0125, "candidate_output": 1.25 },
+    "1525": { "prompt_uncached": 0.25, "prompt_cached": 0.0125, "candidate_output": 1.25 },
+    "1526": { "prompt_uncached": 0.25, "prompt_cached": 0.0125, "candidate_output": 1.25 },
+    "1527": { "prompt_uncached": 0.25, "prompt_cached": 0.0125, "candidate_output": 1.25 },
+    "1318": { "prompt_uncached": 0.125, "prompt_cached": 0.0125, "candidate_output": 0.625 },
+    "1319": { "prompt_uncached": 0.125, "prompt_cached": 0.0125, "candidate_output": 0.625 },
+    "1320": { "prompt_uncached": 0.125, "prompt_cached": 0.0125, "candidate_output": 0.625 },
+    "1322": { "prompt_uncached": 0.125, "prompt_cached": 0.0125, "candidate_output": 0.625 }
+  },
+  "events": [
+    {
+      "event_id": "reg-sample-baseline",
+      "detected_at_utc": "2026-10-17T12:00:00Z",
+      "event_type": "BASELINE_ESTABLISHED",
+      "review_status": "CONFIRMED",
+      "confirmed_at_utc": "2026-10-17T12:05:00Z",
+      "snapshot_range": "#1 -> #20",
+      "turns_analyzed": 120,
+      "delta_5h_pct": 20.0,
+      "delta_weekly_pct": 5.0,
+      "drift_ratio": 1.0,
+      "coupling_ratio": 4.0,
+      "solved_5h_api_usd": 50.0,
+      "solved_weekly_api_usd": 200.0,
+      "summary": "Sample baseline calibration event for Google AI Ultra (5x) dual-window quota pools."
+    }
+  ]
+}

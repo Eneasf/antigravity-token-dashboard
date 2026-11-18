@@ -1,0 +1,94 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+.build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Personal exhaustion ledger & local databases
+data/exhaustion_ledger.json
+data/derived_*.db
+data/antigravity_vault.db*
+*.db-wal
+*.db-shm
+
+# Binary reports containing personal OS metadata
+docs/*.docx
+docs/*.pdf
+docs/reports/COST_UTILITY_ANALYSIS_ULTRA.md
+docs/reports/*cost_utility*
+
+# Logs & Environment
+*.log
+!tests/fixtures/**/*.log
+.env
+.env.*
+
+# macOS System Files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Scratch & Temporary
+scratch/
+tmp/
+*.tmp
+*.lock
+.export.lock
+dashboard/.export.lock
+.export_cache.db*
+dashboard/.export_cache.db*
+.export_cache.json
+dashboard/.export_cache.json
+~$*
+
+# Generated dashboard data projections
+dashboard/data.js
+dashboard/data.demo.js
+dashboard/data.json
+dashboard/turns.js
+dashboard/turns.demo.js
+dashboard/meta.js
+dashboard/meta.demo.js
+dashboard/meta.json
+dashboard/meta.demo.json
+
+# Node & Playwright E2E Test Artifacts
+node_modules/
+test-results/
+playwright-report/
+.playwright/
+dashboard/test-artifacts/
+

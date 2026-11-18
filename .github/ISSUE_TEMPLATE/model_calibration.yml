@@ -1,0 +1,59 @@
+name: Model Calibration Request / New Model ID
+description: Submit a new numeric model_id observed in Antigravity telemetry logs for pricing calibration.
+title: "[MODEL]: Calibrate model_id "
+labels: ["model-calibration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you observe an unmapped or new `model_id` in your Antigravity conversation database or `language_server.log`.
+
+  - type: input
+    id: model_id
+    attributes:
+      label: Numeric Model ID
+      description: What is the integer `model_id` found in your telemetry?
+      placeholder: "e.g. 1325"
+    validations:
+      required: true
+
+  - type: input
+    id: display_name
+    attributes:
+      label: Model Display Name
+      description: The human-readable name of the model in Antigravity's UI.
+      placeholder: "e.g. Gemini 3.9 Flash (High Reasoning)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: family
+    attributes:
+      label: Model Family Silo
+      description: Which provider quota silo does this model belong to?
+      options:
+        - gemini
+        - claude_gpt
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: rate_card
+    attributes:
+      label: Official Pricing / Token Costs (if known)
+      description: Cost per million tokens for input prompt, cached prompt, and candidate output.
+      placeholder: |
+        - Input: $0.75 / MTok
+        - Cached Input: $0.075 / MTok
+        - Output: $3.75 / MTok
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have verified this model ID by checking Antigravity logs or steps metadata.
+          required: true

@@ -1,0 +1,2151 @@
+{
+  "version": 2,
+  "total": 429,
+  "findings": [
+    {
+      "file": "dashboard/index.html",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10B981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10B981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10B981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#94a3b8 -> var(--text-muted)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#94a3b8 -> var(--text-muted)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#FFFFFF -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#0ea5e9"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#0ea5e9"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#0ea5e9"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#22c55e"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#22c55e"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#855227"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#855227"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#8F5B2E"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A855F7"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A855F7"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#DC2626"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/index.html",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/billing.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/billing.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/billing.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/billing.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/billing.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/now-burst.js",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#F59E0B -> var(--status-warning)"
+    },
+    {
+      "file": "dashboard/js/now-burst.js",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#F59E0B -> var(--status-warning)"
+    },
+    {
+      "file": "dashboard/js/now-burst.js",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#EF4444"
+    },
+    {
+      "file": "dashboard/js/now-burst.js",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#EF4444"
+    },
+    {
+      "file": "dashboard/js/now.js",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#FFFFFF -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/js/now.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/now.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/plan-rates.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/plan-rates.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/projects.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-tree.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions-turns.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/sessions.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(3"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/js/swarms.js",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 12px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 14px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 14px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 14px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 16px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_RADIUS",
+      "match": "border-radius: 20px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: -16px 0 48px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 10px 25px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 20px 25px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 4px 12px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 4px 16px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 4px 20px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 0 8px 24px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "BANNED_SHADOW",
+      "match": "box-shadow: 12px 0 30px"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10B981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10B981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10b981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10b981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10b981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10b981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#10b981 -> var(--status-normal)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#94a3b8 -> var(--text-muted)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#94a3b8 -> var(--text-muted)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#BE123C -> var(--status-alert)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#BE123C -> var(--status-alert)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#FFFFFF -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#FFFFFF -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#FFFFFF -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#f59e0b -> var(--status-warning)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#f59e0b -> var(--status-warning)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#ffffff -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "HARDCODED_TOKEN_VALUE",
+      "match": "#ffffff -> var(--surface-card)"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#047857"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#064e3b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#064e3b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#064e3b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#064e3b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#0F766E"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#101317"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#121417"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#121417"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#14171c"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#15803d"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#191E24"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#1E232B"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34D399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34D399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34D399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34D399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34D399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#34d399"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#374151"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#42352C"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#42352C"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#4B5563"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#4F46E5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#57534E"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#595959"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#5EEAD4"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#6b7280"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#6b7280"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#6b7280"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#706B63"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#706B63"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#706B63"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#78350f"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#78350f"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#78716C"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#7E22CE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#8F5B2E"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#92400E"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#991b1b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#991b1b"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#99F6E4"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#9A6538"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#9A6538"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#9A6538"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A1A1AA"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A5B4FC"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A7F3D0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A7F3D0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A7F3D0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A7F3D0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#A8A299"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#C7D2FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#C89D7C"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D4A373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D4A373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D4A373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D4A373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D6D0C5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D6D0C5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D6D0C5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D8B4FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D8B4FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D8B4FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D8B4FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#D8B4FE"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E2D7C3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E2D7C3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E2D7C3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E2D7C3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E2D7C3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E5E7EB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E5E7EB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E5E7EB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#E9D5FF"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#ECFDF5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#ECFDF5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#ECFDF5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#ECFDF5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#EEF2FF"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F0FDFA"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F2EFE9"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F3F4F6"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F3F4F6"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F43F5E"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F5EFEB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F5EFEB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#F5EFEB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FAF5FF"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FCD34D"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDA4AF"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDA4AF"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDE68A"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDF8F3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDF8F3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FDF8F3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FECDD3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FECDD3"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FFF1F2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FFF1F2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#FFFBEB"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#a855f7"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#bbf7d0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#c084fc"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#d4a373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#d4a373"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#d97706"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#dc2626"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#f0fdf4"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#f87171"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#f87171"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#f87171"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#fbbf24"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "OFF_PALETTE_HEX",
+      "match": "#fbbf24"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgb(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(0"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(1"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(2"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(5"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(9"
+    },
+    {
+      "file": "dashboard/styles.css",
+      "rule": "RAW_FUNC_COLOUR",
+      "match": "rgba(9"
+    }
+  ]
+}

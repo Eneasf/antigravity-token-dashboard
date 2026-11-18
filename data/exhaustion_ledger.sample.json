@@ -1,0 +1,33 @@
+{
+  "description": "Sample template for persistent append-only ledger of confirmed Google One AI credit exhaustion incidents and baseline deductions.",
+  "incidents": [
+    {
+      "code": 429,
+      "credit_burn_gbp": 1.00,
+      "credit_burn_usd": 1.04,
+      "credits_burned": 100,
+      "description": "Sample statement deduction: -100 credits (01 Jan 2026, 12:00 UTC)",
+      "end_utc": "2026-01-01T13:00:00.000000+00:00",
+      "hour_display": "01 Jan 2026, 12:00:00 UTC",
+      "hour_timestamp": "2026-01-01T12:00:00Z",
+      "incident_id": "exc-20260101-12",
+      "models": {
+        "Gemini 3.8 Flash (High)": 40
+      },
+      "reason": "RESOURCE_EXHAUSTED",
+      "start_utc": "2026-01-01T12:00:00.000000+00:00",
+      "turns_count": 40
+    }
+  ],
+  "prepaid_pack": {
+    "auto_reload": true,
+    "cost_per_credit_gbp": 0.009596,
+    "cost_per_credit_usd": 0.01,
+    "pack_size": 2500,
+    "packs_purchased": 1,
+    "purchase_price_gbp": 23.99,
+    "purchase_price_usd": 25.0,
+    "total_credits": 2500
+  },
+  "version": 1
+}
